@@ -1,3 +1,5 @@
+# build_tokenizer.py
+
 import os
 import json
 import argparse

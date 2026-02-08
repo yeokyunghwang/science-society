@@ -1,3 +1,5 @@
+# train_annual_2stage_preinit.py
+
 import os
 import argparse
 from typing import List, Tuple, Dict, Set, Optional
@@ -9,7 +11,7 @@ from transformers import (
     Trainer,
     TrainingArguments,
 )
-from node_controlled_collator import NodeControlledMLMCollator
+from collator import NodeControlledMLMCollator
 
 
 def read_node_vocab(path: str) -> List[str]:
@@ -194,13 +196,11 @@ def main():
         # 4) collator: exactly K node masks per sample (default=1)
         collator = NodeControlledMLMCollator(
             tokenizer=tokenizer,
-            mlm=True,
-            mlm_probability=0.15,   # 의미상 크게 중요하지 않음 (exact_k_masks가 우선)
             node_token_ids=node_token_ids,
-            exact_k_masks=args.exact_k_masks,
-            min_masks=args.exact_k_masks,
-            max_masks=args.exact_k_masks,
+            mask_replace_prob=0.9,
+            random_replace_prob=0.0,
         )
+
 
         # 5) training args (연도별로 새 output_dir)
         training_args = TrainingArguments(

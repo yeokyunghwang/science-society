@@ -1,3 +1,5 @@
+#train_mlm_preinit.py
+
 import os
 import argparse
 from typing import List, Set, Optional, Dict
@@ -11,6 +13,7 @@ from transformers import (
     TrainingArguments,
     DataCollatorForLanguageModeling,
 )
+from collator import NodeOnlyMLMCollator
 
 
 def read_node_vocab(path: str) -> List[str]:
@@ -91,74 +94,6 @@ def init_added_node_embeddings_mean_of_subwords(
 
     print(f"[init] initialized added node token embeddings: {n_inited}, fallback_to_UNK: {n_fallback}")
 
-
-class NodeOnlyRandomMLMCollator(DataCollatorForLanguageModeling):
-    """
-    - 마스킹 후보: node_token_ids에 속하는 토큰만
-    - 15% 랜덤 마스킹 확률(mlm_probability)
-    - 80/10/10 룰 유지
-    - random replacement(10%)도 node vocab 안에서만 샘플링 (노드 시퀀스 보존)
-    """
-    def __init__(
-        self,
-        tokenizer,
-        node_token_ids: Set[int],
-        mlm_probability: float = 0.15,
-    ):
-        super().__init__(tokenizer=tokenizer, mlm=True, mlm_probability=mlm_probability)
-        if not node_token_ids:
-            raise ValueError("node_token_ids is empty. Check node vocab and tokenizer.add_tokens()")
-        self.node_token_ids = set(int(x) for x in node_token_ids)
-
-    def torch_mask_tokens(
-        self,
-        inputs: torch.Tensor,
-        special_tokens_mask: Optional[torch.Tensor] = None,
-        **kwargs,
-    ):
-        labels = inputs.clone()
-
-        if special_tokens_mask is None:
-            special_tokens_mask = torch.zeros_like(inputs, dtype=torch.bool)
-        else:
-            special_tokens_mask = special_tokens_mask.bool()
-
-        # node 토큰 위치만 True
-        node_mask = torch.zeros_like(inputs, dtype=torch.bool)
-        for tid in self.node_token_ids:
-            node_mask |= (inputs == tid)
-
-        # 마스킹 확률: node 위치만 mlm_probability, 나머지 0
-        probability_matrix = torch.full(labels.shape, self.mlm_probability, device=inputs.device)
-        probability_matrix = probability_matrix * node_mask.float()
-        probability_matrix.masked_fill_(special_tokens_mask, 0.0)
-
-        masked_indices = torch.bernoulli(probability_matrix).bool()
-        labels[~masked_indices] = -100
-
-        # 80% -> [MASK]
-        indices_replaced = (
-            torch.bernoulli(torch.full(labels.shape, 0.8, device=inputs.device)).bool()
-            & masked_indices
-        )
-        inputs[indices_replaced] = self.tokenizer.mask_token_id
-
-        # 10% -> random token (node vocab 안에서만)
-        indices_random = (
-            torch.bernoulli(torch.full(labels.shape, 0.5, device=inputs.device)).bool()
-            & masked_indices
-            & ~indices_replaced
-        )
-
-        node_ids = torch.tensor(sorted(list(self.node_token_ids)), device=inputs.device, dtype=torch.long)
-        rand_idx = torch.randint(len(node_ids), inputs.shape, device=inputs.device)
-        random_words = node_ids[rand_idx]
-        inputs[indices_random] = random_words[indices_random]
-
-        # 나머지 10%는 그대로 유지
-        return inputs, labels
-
-
 def tokenize_dataset(ds, tokenizer, max_len: int):
     def tok(batch):
         return tokenizer(batch["text"], truncation=True, max_length=max_len)
@@ -234,10 +169,12 @@ def main():
     # 7) node-only 15% MLM collator
     node_token_ids = build_node_token_ids(tokenizer, node_tokens)
     print(f"[mask] node_token_ids in tokenizer: {len(node_token_ids)}")
-    collator = NodeOnlyRandomMLMCollator(
+    collator = NodeOnlyMLMCollator(
         tokenizer=tokenizer,
         node_token_ids=node_token_ids,
-        mlm_probability=args.mlm_prob,
+        mlm_probability=0.15,
+        mask_replace_prob=0.9,
+        random_replace_prob=0.0,
     )
 
     # 8) Trainer
