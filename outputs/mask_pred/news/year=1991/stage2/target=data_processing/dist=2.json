@@ -1,0 +1,214 @@
+{
+  "domain": "news",
+  "year": 1991,
+  "stage": "stage2",
+  "checkpoint_dir": "./checkpoints/annual_node/news/year=1991/stage2",
+  "corpus_path": "./corpus/news_1991.txt",
+  "target": "data_processing",
+  "distance": 2,
+  "topk": 50,
+  "max_contexts": 1000,
+  "num_contexts_used": 661,
+  "predictions": [
+    {
+      "token": "[UNK]",
+      "avg_prob": 0.13610418620075518
+    },
+    {
+      "token": "automation",
+      "avg_prob": 0.023441593345880238
+    },
+    {
+      "token": "banks",
+      "avg_prob": 0.017335837160246996
+    },
+    {
+      "token": "electronic_information_systems",
+      "avg_prob": 0.01547815996772525
+    },
+    {
+      "token": "computers",
+      "avg_prob": 0.01259015832566931
+    },
+    {
+      "token": "software",
+      "avg_prob": 0.012444806344026584
+    },
+    {
+      "token": "bank_automation",
+      "avg_prob": 0.012263590930334085
+    },
+    {
+      "token": "banking_industry",
+      "avg_prob": 0.010475191001949663
+    },
+    {
+      "token": "information_systems",
+      "avg_prob": 0.008354511849565288
+    },
+    {
+      "token": "cost_control",
+      "avg_prob": 0.008278747139783951
+    },
+    {
+      "token": "personal_computers",
+      "avg_prob": 0.008151611760568646
+    },
+    {
+      "token": "operating_costs",
+      "avg_prob": 0.008057975748446411
+    },
+    {
+      "token": "[PAD]",
+      "avg_prob": 0.007381769146637193
+    },
+    {
+      "token": "automated_teller_machines",
+      "avg_prob": 0.007358731052655149
+    },
+    {
+      "token": "data_processing",
+      "avg_prob": 0.00732437978943958
+    },
+    {
+      "token": "product_development",
+      "avg_prob": 0.006824001051350279
+    },
+    {
+      "token": "electronic_funds_transfer_systems",
+      "avg_prob": 0.006721061932248116
+    },
+    {
+      "token": "technology",
+      "avg_prob": 0.006443727672960835
+    },
+    {
+      "token": "productivity",
+      "avg_prob": 0.006322391225783177
+    },
+    {
+      "token": "robots",
+      "avg_prob": 0.006048164130188525
+    },
+    {
+      "token": "money_center_banks",
+      "avg_prob": 0.0057192067536072505
+    },
+    {
+      "token": "customer_services",
+      "avg_prob": 0.00571503423279836
+    },
+    {
+      "token": "artificial_intelligence",
+      "avg_prob": 0.0054143818175339435
+    },
+    {
+      "token": "competition",
+      "avg_prob": 0.005374948361301101
+    },
+    {
+      "token": "regional_banks",
+      "avg_prob": 0.005112283592294771
+    },
+    {
+      "token": "banking",
+      "avg_prob": 0.00478059107995337
+    },
+    {
+      "token": "automated_clearing_houses",
+      "avg_prob": 0.004698063209089362
+    },
+    {
+      "token": "financial_institutions",
+      "avg_prob": 0.0046662756498521704
+    },
+    {
+      "token": "us",
+      "avg_prob": 0.0046485699845145514
+    },
+    {
+      "token": "atm",
+      "avg_prob": 0.004528306724125917
+    },
+    {
+      "token": "mortgages",
+      "avg_prob": 0.00424542537030384
+    },
+    {
+      "token": "executives",
+      "avg_prob": 0.004215398821958498
+    },
+    {
+      "token": "alliances",
+      "avg_prob": 0.004049857878945423
+    },
+    {
+      "token": "employees",
+      "avg_prob": 0.004039375214723742
+    },
+    {
+      "token": "telephones",
+      "avg_prob": 0.004004061288599457
+    },
+    {
+      "token": "stocks_and_bonds",
+      "avg_prob": 0.003995243721874431
+    },
+    {
+      "token": "large_banks",
+      "avg_prob": 0.0038668273095026962
+    },
+    {
+      "token": "software_products",
+      "avg_prob": 0.003847924650957187
+    },
+    {
+      "token": "check_processing",
+      "avg_prob": 0.003836319710163613
+    },
+    {
+      "token": "retail_banking",
+      "avg_prob": 0.003815865855895639
+    },
+    {
+      "token": "service_introduction",
+      "avg_prob": 0.0037920019262659113
+    },
+    {
+      "token": "check_clearings",
+      "avg_prob": 0.0037668745263657543
+    },
+    {
+      "token": "computer_industry",
+      "avg_prob": 0.0037582742342252345
+    },
+    {
+      "token": "cost_reduction",
+      "avg_prob": 0.003709664671709213
+    },
+    {
+      "token": "marketing",
+      "avg_prob": 0.0037046886053667114
+    },
+    {
+      "token": "strategic_planning",
+      "avg_prob": 0.0036720594580401666
+    },
+    {
+      "token": "information_management",
+      "avg_prob": 0.0036513501814065073
+    },
+    {
+      "token": "checking_accounts",
+      "avg_prob": 0.0036322126844546073
+    },
+    {
+      "token": "outsourcing",
+      "avg_prob": 0.0036299130516126753
+    },
+    {
+      "token": "bank_holding_companies",
+      "avg_prob": 0.003598001871897909
+    }
+  ]
+}

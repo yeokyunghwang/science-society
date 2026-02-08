@@ -1,0 +1,214 @@
+{
+  "domain": "news",
+  "year": 1995,
+  "stage": "stage2",
+  "checkpoint_dir": "./checkpoints/annual_node/news/year=1995/stage2",
+  "corpus_path": "./corpus/news_1995.txt",
+  "target": "politics",
+  "distance": 2,
+  "topk": 50,
+  "max_contexts": 1000,
+  "num_contexts_used": 81,
+  "predictions": [
+    {
+      "token": "[UNK]",
+      "avg_prob": 0.15493586412803442
+    },
+    {
+      "token": "automation",
+      "avg_prob": 0.01260806992650032
+    },
+    {
+      "token": "information_systems",
+      "avg_prob": 0.010042605889611877
+    },
+    {
+      "token": "electronic_information_systems",
+      "avg_prob": 0.009178544737450365
+    },
+    {
+      "token": "software_industry",
+      "avg_prob": 0.009033351825200953
+    },
+    {
+      "token": "software",
+      "avg_prob": 0.007639497914351523
+    },
+    {
+      "token": "product_introduction",
+      "avg_prob": 0.006541540817502741
+    },
+    {
+      "token": "service_introduction",
+      "avg_prob": 0.006436344782845412
+    },
+    {
+      "token": "customer_services",
+      "avg_prob": 0.006398182925237696
+    },
+    {
+      "token": "pornography_and_obscenity",
+      "avg_prob": 0.006143503391649574
+    },
+    {
+      "token": "pacific",
+      "avg_prob": 0.005474386027344735
+    },
+    {
+      "token": "computers",
+      "avg_prob": 0.005438390929527857
+    },
+    {
+      "token": "product_lines",
+      "avg_prob": 0.005380444743079008
+    },
+    {
+      "token": "banking_industry",
+      "avg_prob": 0.0052519105662071665
+    },
+    {
+      "token": "internet",
+      "avg_prob": 0.004968996725999463
+    },
+    {
+      "token": "north_central",
+      "avg_prob": 0.004780483820165197
+    },
+    {
+      "token": "employees",
+      "avg_prob": 0.004756402225757484
+    },
+    {
+      "token": "electronic_mail",
+      "avg_prob": 0.004641522976776792
+    },
+    {
+      "token": "corporate_profiles",
+      "avg_prob": 0.004623575485311449
+    },
+    {
+      "token": "product_development",
+      "avg_prob": 0.004608753020875156
+    },
+    {
+      "token": "software_products",
+      "avg_prob": 0.004386209918615909
+    },
+    {
+      "token": "technology",
+      "avg_prob": 0.004089019688711102
+    },
+    {
+      "token": "personal_profiles",
+      "avg_prob": 0.00406780216231275
+    },
+    {
+      "token": "electronics_industry",
+      "avg_prob": 0.003984026247494374
+    },
+    {
+      "token": "executives",
+      "avg_prob": 0.003983127525197747
+    },
+    {
+      "token": "television",
+      "avg_prob": 0.0039531941583845764
+    },
+    {
+      "token": "robots",
+      "avg_prob": 0.0038061135034594272
+    },
+    {
+      "token": "small_business",
+      "avg_prob": 0.003762754276031991
+    },
+    {
+      "token": "marketing",
+      "avg_prob": 0.003743699755028097
+    },
+    {
+      "token": "southwest",
+      "avg_prob": 0.0037269779848149763
+    },
+    {
+      "token": "alliances",
+      "avg_prob": 0.0037137699077156054
+    },
+    {
+      "token": "manufacturing",
+      "avg_prob": 0.003647251115244341
+    },
+    {
+      "token": "financial_statements",
+      "avg_prob": 0.0035986105571142756
+    },
+    {
+      "token": "new_england",
+      "avg_prob": 0.0035774706241985164
+    },
+    {
+      "token": "mountain",
+      "avg_prob": 0.0035274854712446947
+    },
+    {
+      "token": "personal_computers",
+      "avg_prob": 0.0034907037330366955
+    },
+    {
+      "token": "trends",
+      "avg_prob": 0.0034665940362694006
+    },
+    {
+      "token": "computer_industry",
+      "avg_prob": 0.003431587200288454
+    },
+    {
+      "token": "bank_automation",
+      "avg_prob": 0.003410923500339706
+    },
+    {
+      "token": "terrorism",
+      "avg_prob": 0.003405748897542556
+    },
+    {
+      "token": "engineers",
+      "avg_prob": 0.0033780341868155767
+    },
+    {
+      "token": "telephones_and_telecommunications",
+      "avg_prob": 0.0033670320893482617
+    },
+    {
+      "token": "office_automation",
+      "avg_prob": 0.003353592265062989
+    },
+    {
+      "token": "manufacturers",
+      "avg_prob": 0.003351693802917572
+    },
+    {
+      "token": "cost_control",
+      "avg_prob": 0.0033485922974216035
+    },
+    {
+      "token": "atm",
+      "avg_prob": 0.003345572263268488
+    },
+    {
+      "token": "presidents",
+      "avg_prob": 0.0032829800267901383
+    },
+    {
+      "token": "information_superhighway",
+      "avg_prob": 0.003276860952133038
+    },
+    {
+      "token": "servers",
+      "avg_prob": 0.003242234050324469
+    },
+    {
+      "token": "multimedia",
+      "avg_prob": 0.003169164166320115
+    }
+  ]
+}

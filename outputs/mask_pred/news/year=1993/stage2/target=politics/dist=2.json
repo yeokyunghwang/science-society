@@ -1,0 +1,214 @@
+{
+  "domain": "news",
+  "year": 1993,
+  "stage": "stage2",
+  "checkpoint_dir": "./checkpoints/annual_node/news/year=1993/stage2",
+  "corpus_path": "./corpus/news_1993.txt",
+  "target": "politics",
+  "distance": 2,
+  "topk": 50,
+  "max_contexts": 1000,
+  "num_contexts_used": 19,
+  "predictions": [
+    {
+      "token": "[UNK]",
+      "avg_prob": 0.08860636982870729
+    },
+    {
+      "token": "automation",
+      "avg_prob": 0.0184752064953117
+    },
+    {
+      "token": "software",
+      "avg_prob": 0.008332449580646224
+    },
+    {
+      "token": "software_industry",
+      "avg_prob": 0.007556338962684903
+    },
+    {
+      "token": "information_systems",
+      "avg_prob": 0.007118793834439095
+    },
+    {
+      "token": "computers",
+      "avg_prob": 0.006770135075049965
+    },
+    {
+      "token": "pacific",
+      "avg_prob": 0.006452284171245992
+    },
+    {
+      "token": "public_opinion",
+      "avg_prob": 0.006443499168381095
+    },
+    {
+      "token": "north_central",
+      "avg_prob": 0.005309581305482425
+    },
+    {
+      "token": "product_development",
+      "avg_prob": 0.005294377508107573
+    },
+    {
+      "token": "science_and_technology",
+      "avg_prob": 0.004980674168715875
+    },
+    {
+      "token": "office_automation",
+      "avg_prob": 0.004899432040894261
+    },
+    {
+      "token": "electronic_mail",
+      "avg_prob": 0.004827890112730009
+    },
+    {
+      "token": "joint_ventures_and_consortiums",
+      "avg_prob": 0.0043309534168136975
+    },
+    {
+      "token": "beauty_contests",
+      "avg_prob": 0.004321038676425815
+    },
+    {
+      "token": "news_and_news_media",
+      "avg_prob": 0.004229004494845867
+    },
+    {
+      "token": "dancing",
+      "avg_prob": 0.0042039763648062944
+    },
+    {
+      "token": "birth_control_and_family_planning",
+      "avg_prob": 0.004195142129901797
+    },
+    {
+      "token": "security_and_warning_systems",
+      "avg_prob": 0.004166084050666541
+    },
+    {
+      "token": "employees",
+      "avg_prob": 0.0041582753936595775
+    },
+    {
+      "token": "product_introduction",
+      "avg_prob": 0.004139108496019617
+    },
+    {
+      "token": "electronic_information_systems",
+      "avg_prob": 0.004137190188177758
+    },
+    {
+      "token": "robots",
+      "avg_prob": 0.004111999805134378
+    },
+    {
+      "token": "corporate_profiles",
+      "avg_prob": 0.0040532483253628016
+    },
+    {
+      "token": "telephones_and_telecommunications",
+      "avg_prob": 0.003918129805242643
+    },
+    {
+      "token": "new_england",
+      "avg_prob": 0.003908708822564222
+    },
+    {
+      "token": "service_introduction",
+      "avg_prob": 0.0039004285777495666
+    },
+    {
+      "token": "personal_computers",
+      "avg_prob": 0.003883465410520633
+    },
+    {
+      "token": "executives",
+      "avg_prob": 0.0037925484793959185
+    },
+    {
+      "token": "[PAD]",
+      "avg_prob": 0.0037274460773915052
+    },
+    {
+      "token": "bank_automation",
+      "avg_prob": 0.0036660139448940754
+    },
+    {
+      "token": "customer_services",
+      "avg_prob": 0.0036098357791510913
+    },
+    {
+      "token": "quotas",
+      "avg_prob": 0.00354105222504586
+    },
+    {
+      "token": "south_atlantic",
+      "avg_prob": 0.0035398204012640883
+    },
+    {
+      "token": "elevators_and_escalators",
+      "avg_prob": 0.003503362648189068
+    },
+    {
+      "token": "reviews",
+      "avg_prob": 0.0034403515746816993
+    },
+    {
+      "token": "design",
+      "avg_prob": 0.003398895452846773
+    },
+    {
+      "token": "finances",
+      "avg_prob": 0.003394509432837367
+    },
+    {
+      "token": "medicine_and_health",
+      "avg_prob": 0.003380266483873129
+    },
+    {
+      "token": "banking_industry",
+      "avg_prob": 0.003361776917396734
+    },
+    {
+      "token": "oceans",
+      "avg_prob": 0.0032865717593166563
+    },
+    {
+      "token": "sport_fishing",
+      "avg_prob": 0.0032823029129455485
+    },
+    {
+      "token": "stocks_and_bonds",
+      "avg_prob": 0.0032628802582621574
+    },
+    {
+      "token": "alliances",
+      "avg_prob": 0.003261928136150042
+    },
+    {
+      "token": "deferred_income",
+      "avg_prob": 0.003255561285186559
+    },
+    {
+      "token": "research",
+      "avg_prob": 0.003251640661619604
+    },
+    {
+      "token": "biographical_information",
+      "avg_prob": 0.0032477946175883212
+    },
+    {
+      "token": "computer_industry",
+      "avg_prob": 0.0032386346553851452
+    },
+    {
+      "token": "inventions_and_inventors",
+      "avg_prob": 0.0032245488255284727
+    },
+    {
+      "token": "decisions_and_verdicts",
+      "avg_prob": 0.0031784415477886796
+    }
+  ]
+}

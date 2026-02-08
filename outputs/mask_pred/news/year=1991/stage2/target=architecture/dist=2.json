@@ -1,0 +1,214 @@
+{
+  "domain": "news",
+  "year": 1991,
+  "stage": "stage2",
+  "checkpoint_dir": "./checkpoints/annual_node/news/year=1991/stage2",
+  "corpus_path": "./corpus/news_1991.txt",
+  "target": "architecture",
+  "distance": 2,
+  "topk": 50,
+  "max_contexts": 1000,
+  "num_contexts_used": 28,
+  "predictions": [
+    {
+      "token": "[UNK]",
+      "avg_prob": 0.21435517877606408
+    },
+    {
+      "token": "automation",
+      "avg_prob": 0.022580104613942758
+    },
+    {
+      "token": "banks",
+      "avg_prob": 0.011909514998218842
+    },
+    {
+      "token": "computers",
+      "avg_prob": 0.011159683062162782
+    },
+    {
+      "token": "software",
+      "avg_prob": 0.009583238445754563
+    },
+    {
+      "token": "news_and_news_media",
+      "avg_prob": 0.0077600604854524136
+    },
+    {
+      "token": "bank_automation",
+      "avg_prob": 0.0077192868505205426
+    },
+    {
+      "token": "electronic_information_systems",
+      "avg_prob": 0.007709999506672224
+    },
+    {
+      "token": "labor",
+      "avg_prob": 0.007687208708375692
+    },
+    {
+      "token": "information_systems",
+      "avg_prob": 0.007490167693634119
+    },
+    {
+      "token": "robots",
+      "avg_prob": 0.007349339500069618
+    },
+    {
+      "token": "banking_industry",
+      "avg_prob": 0.0072355407340052936
+    },
+    {
+      "token": "product_development",
+      "avg_prob": 0.006375544205574053
+    },
+    {
+      "token": "personal_computers",
+      "avg_prob": 0.006121871103199997
+    },
+    {
+      "token": "us",
+      "avg_prob": 0.0058022558628379
+    },
+    {
+      "token": "artificial_intelligence",
+      "avg_prob": 0.00572837664679225
+    },
+    {
+      "token": "cost_control",
+      "avg_prob": 0.0054594107420632134
+    },
+    {
+      "token": "decisions_and_verdicts",
+      "avg_prob": 0.005263675004243851
+    },
+    {
+      "token": "technology",
+      "avg_prob": 0.005222472758894718
+    },
+    {
+      "token": "automated_teller_machines",
+      "avg_prob": 0.005165156011504156
+    },
+    {
+      "token": "operating_costs",
+      "avg_prob": 0.005081695495531536
+    },
+    {
+      "token": "data_processing",
+      "avg_prob": 0.004786132941953838
+    },
+    {
+      "token": "stocks_and_bonds",
+      "avg_prob": 0.004585916642099619
+    },
+    {
+      "token": "law_and_legislation",
+      "avg_prob": 0.004466702695935965
+    },
+    {
+      "token": "money_center_banks",
+      "avg_prob": 0.004439206673177304
+    },
+    {
+      "token": "productivity",
+      "avg_prob": 0.004402500581748497
+    },
+    {
+      "token": "electronic_funds_transfer_systems",
+      "avg_prob": 0.004393445999911902
+    },
+    {
+      "token": "suits_and_litigation",
+      "avg_prob": 0.00439071049913764
+    },
+    {
+      "token": "software_products",
+      "avg_prob": 0.004373317584395409
+    },
+    {
+      "token": "newspapers",
+      "avg_prob": 0.004266031086444855
+    },
+    {
+      "token": "customer_services",
+      "avg_prob": 0.00423552487224627
+    },
+    {
+      "token": "competition",
+      "avg_prob": 0.004117738743800493
+    },
+    {
+      "token": "check_clearings",
+      "avg_prob": 0.004087894631084055
+    },
+    {
+      "token": "check_processing",
+      "avg_prob": 0.003960583620937541
+    },
+    {
+      "token": "cost_reduction",
+      "avg_prob": 0.003941206028684974
+    },
+    {
+      "token": "service_introduction",
+      "avg_prob": 0.00387030984275043
+    },
+    {
+      "token": "banking",
+      "avg_prob": 0.003856862739970287
+    },
+    {
+      "token": "checking_accounts",
+      "avg_prob": 0.0038151413900777698
+    },
+    {
+      "token": "branch_banking",
+      "avg_prob": 0.003792397522677978
+    },
+    {
+      "token": "atm",
+      "avg_prob": 0.003779845933119456
+    },
+    {
+      "token": "bank_holding_companies",
+      "avg_prob": 0.0037796342900643745
+    },
+    {
+      "token": "management",
+      "avg_prob": 0.0036930404603481293
+    },
+    {
+      "token": "automated_clearing_houses",
+      "avg_prob": 0.0036418509488511416
+    },
+    {
+      "token": "regional_banks",
+      "avg_prob": 0.0036173731432822737
+    },
+    {
+      "token": "office_automation",
+      "avg_prob": 0.003582116565667093
+    },
+    {
+      "token": "executives",
+      "avg_prob": 0.003558412443713418
+    },
+    {
+      "token": "astronautics",
+      "avg_prob": 0.003557503456249833
+    },
+    {
+      "token": "strategic_planning",
+      "avg_prob": 0.003552353009581566
+    },
+    {
+      "token": "industrial_and_occupational_hazards",
+      "avg_prob": 0.0035336294677108526
+    },
+    {
+      "token": "financial_institutions",
+      "avg_prob": 0.0034915952433255456
+    }
+  ]
+}

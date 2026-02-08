@@ -1,0 +1,214 @@
+{
+  "domain": "news",
+  "year": 1992,
+  "stage": "stage2",
+  "checkpoint_dir": "./checkpoints/annual_node/news/year=1992/stage2",
+  "corpus_path": "./corpus/news_1992.txt",
+  "target": "software",
+  "distance": 2,
+  "topk": 50,
+  "max_contexts": 1000,
+  "num_contexts_used": 1000,
+  "predictions": [
+    {
+      "token": "[UNK]",
+      "avg_prob": 0.09581905451975763
+    },
+    {
+      "token": "automation",
+      "avg_prob": 0.012921839026268572
+    },
+    {
+      "token": "pacific",
+      "avg_prob": 0.0080341785880737
+    },
+    {
+      "token": "software",
+      "avg_prob": 0.007684329873416573
+    },
+    {
+      "token": "computer_industry",
+      "avg_prob": 0.006849670409642996
+    },
+    {
+      "token": "office_automation",
+      "avg_prob": 0.00666923404151389
+    },
+    {
+      "token": "information_systems",
+      "avg_prob": 0.006600119656900893
+    },
+    {
+      "token": "customer_services",
+      "avg_prob": 0.00628378191059852
+    },
+    {
+      "token": "alliances",
+      "avg_prob": 0.0060064834578028945
+    },
+    {
+      "token": "software_industry",
+      "avg_prob": 0.0059436984200336345
+    },
+    {
+      "token": "personal_computers",
+      "avg_prob": 0.005781512323534116
+    },
+    {
+      "token": "labor",
+      "avg_prob": 0.005618676199810579
+    },
+    {
+      "token": "cost_control",
+      "avg_prob": 0.005545681051210496
+    },
+    {
+      "token": "computers",
+      "avg_prob": 0.005388640049146488
+    },
+    {
+      "token": "executives",
+      "avg_prob": 0.0052725637684230345
+    },
+    {
+      "token": "product_introduction",
+      "avg_prob": 0.0052087333810637996
+    },
+    {
+      "token": "electronic_information_systems",
+      "avg_prob": 0.0052036012057214975
+    },
+    {
+      "token": "news_and_news_media",
+      "avg_prob": 0.0051466028055395276
+    },
+    {
+      "token": "bank_automation",
+      "avg_prob": 0.005090216107249775
+    },
+    {
+      "token": "product_development",
+      "avg_prob": 0.004945471406787507
+    },
+    {
+      "token": "law_and_legislation",
+      "avg_prob": 0.004879113489195057
+    },
+    {
+      "token": "science_and_technology",
+      "avg_prob": 0.004740921114312692
+    },
+    {
+      "token": "north_central",
+      "avg_prob": 0.0046312589170616324
+    },
+    {
+      "token": "banking_industry",
+      "avg_prob": 0.004446121925028052
+    },
+    {
+      "token": "electronics_industry",
+      "avg_prob": 0.004429105903390738
+    },
+    {
+      "token": "automated_teller_machines",
+      "avg_prob": 0.004194016182411396
+    },
+    {
+      "token": "work_stations",
+      "avg_prob": 0.004100946920352091
+    },
+    {
+      "token": "technology",
+      "avg_prob": 0.0040546764942156754
+    },
+    {
+      "token": "service_introduction",
+      "avg_prob": 0.003913564289205747
+    },
+    {
+      "token": "manufacturing",
+      "avg_prob": 0.003861181152000039
+    },
+    {
+      "token": "computer_service_industry",
+      "avg_prob": 0.003821856206300027
+    },
+    {
+      "token": "trademarks",
+      "avg_prob": 0.003752389902904354
+    },
+    {
+      "token": "design",
+      "avg_prob": 0.003610539380125366
+    },
+    {
+      "token": "costs",
+      "avg_prob": 0.0035201983613011184
+    },
+    {
+      "token": "information_technology",
+      "avg_prob": 0.003462731287837525
+    },
+    {
+      "token": "new_england",
+      "avg_prob": 0.0034440021178166885
+    },
+    {
+      "token": "mountain",
+      "avg_prob": 0.003441030702586951
+    },
+    {
+      "token": "data_processing",
+      "avg_prob": 0.0034275470846467583
+    },
+    {
+      "token": "employees",
+      "avg_prob": 0.003334188389794781
+    },
+    {
+      "token": "productivity",
+      "avg_prob": 0.0033097111202173594
+    },
+    {
+      "token": "robots",
+      "avg_prob": 0.003304729934376604
+    },
+    {
+      "token": "presidents",
+      "avg_prob": 0.003278703750898918
+    },
+    {
+      "token": "open_systems",
+      "avg_prob": 0.0032581858605885044
+    },
+    {
+      "token": "management_information_systems",
+      "avg_prob": 0.0032555388909032063
+    },
+    {
+      "token": "marketing_agreements",
+      "avg_prob": 0.0032115386787205514
+    },
+    {
+      "token": "soccer",
+      "avg_prob": 0.003141141862475446
+    },
+    {
+      "token": "medicine_and_health",
+      "avg_prob": 0.00312322994328237
+    },
+    {
+      "token": "banks",
+      "avg_prob": 0.0031104444785038745
+    },
+    {
+      "token": "middle_atlantic",
+      "avg_prob": 0.003089376358195593
+    },
+    {
+      "token": "marketing",
+      "avg_prob": 0.003037791270427957
+    }
+  ]
+}

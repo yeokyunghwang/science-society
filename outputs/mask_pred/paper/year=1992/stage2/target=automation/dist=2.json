@@ -1,0 +1,214 @@
+{
+  "domain": "paper",
+  "year": 1992,
+  "stage": "stage2",
+  "checkpoint_dir": "./checkpoints/annual_node/paper/year=1992/stage2",
+  "corpus_path": "./corpus/paper_1992.txt",
+  "target": "automation",
+  "distance": 2,
+  "topk": 50,
+  "max_contexts": 1000,
+  "num_contexts_used": 130,
+  "predictions": [
+    {
+      "token": "[UNK]",
+      "avg_prob": 0.540015691289535
+    },
+    {
+      "token": "mathematics",
+      "avg_prob": 0.014093799788791399
+    },
+    {
+      "token": "physics",
+      "avg_prob": 0.0077776698538890255
+    },
+    {
+      "token": "biology",
+      "avg_prob": 0.006775291658078248
+    },
+    {
+      "token": "philosophy",
+      "avg_prob": 0.0059576515215807235
+    },
+    {
+      "token": "geometry",
+      "avg_prob": 0.0036011939563860115
+    },
+    {
+      "token": "logic",
+      "avg_prob": 0.0035732713510067417
+    },
+    {
+      "token": "[PAD]",
+      "avg_prob": 0.003562580833498102
+    },
+    {
+      "token": "genetic_algorithm",
+      "avg_prob": 0.0035507889231666924
+    },
+    {
+      "token": "linguistics",
+      "avg_prob": 0.00319816092781436
+    },
+    {
+      "token": "archaeology",
+      "avg_prob": 0.0030068305500138264
+    },
+    {
+      "token": "graph_theory",
+      "avg_prob": 0.0029259041614400653
+    },
+    {
+      "token": "management",
+      "avg_prob": 0.0027959317416669086
+    },
+    {
+      "token": "psychology",
+      "avg_prob": 0.002695891829744841
+    },
+    {
+      "token": "cybernetics",
+      "avg_prob": 0.0026665769123400632
+    },
+    {
+      "token": "computer_science",
+      "avg_prob": 0.002573660099341606
+    },
+    {
+      "token": "gene",
+      "avg_prob": 0.002401511218900291
+    },
+    {
+      "token": "geology",
+      "avg_prob": 0.0021600024649300253
+    },
+    {
+      "token": "politics",
+      "avg_prob": 0.002080816010801265
+    },
+    {
+      "token": "[MASK]",
+      "avg_prob": 0.002079815951247628
+    },
+    {
+      "token": "artificial_neural_network",
+      "avg_prob": 0.0020414934350320925
+    },
+    {
+      "token": "computer_programming",
+      "avg_prob": 0.0019410675803485972
+    },
+    {
+      "token": "punctuation",
+      "avg_prob": 0.0018570957203897147
+    },
+    {
+      "token": "music",
+      "avg_prob": 0.0018445931921283213
+    },
+    {
+      "token": "aeronautics",
+      "avg_prob": 0.0018368777424956743
+    },
+    {
+      "token": "abstract_data_type",
+      "avg_prob": 0.0017335483902850403
+    },
+    {
+      "token": "robot",
+      "avg_prob": 0.0017074907198548317
+    },
+    {
+      "token": "economics",
+      "avg_prob": 0.001674995156757247
+    },
+    {
+      "token": "signal_processing",
+      "avg_prob": 0.0016321250721095847
+    },
+    {
+      "token": "visualization",
+      "avg_prob": 0.0015763298903878492
+    },
+    {
+      "token": "bounded_function",
+      "avg_prob": 0.0015622891557331268
+    },
+    {
+      "token": "engineering",
+      "avg_prob": 0.00155377704352357
+    },
+    {
+      "token": "nonlinear_system",
+      "avg_prob": 0.001544740239982135
+    },
+    {
+      "token": "project_management",
+      "avg_prob": 0.0014902088960791512
+    },
+    {
+      "token": "vision",
+      "avg_prob": 0.0013938305201008916
+    },
+    {
+      "token": "inference",
+      "avg_prob": 0.0013907387843713737
+    },
+    {
+      "token": "control_system",
+      "avg_prob": 0.001372607896785037
+    },
+    {
+      "token": "population",
+      "avg_prob": 0.0013211943683787608
+    },
+    {
+      "token": "data_warehouse",
+      "avg_prob": 0.001307965255378244
+    },
+    {
+      "token": "navigation",
+      "avg_prob": 0.001300238634352214
+    },
+    {
+      "token": "optics",
+      "avg_prob": 0.001258869535591015
+    },
+    {
+      "token": "statistics",
+      "avg_prob": 0.0012573312700165783
+    },
+    {
+      "token": "probabilistic_logic",
+      "avg_prob": 0.0012540508137765126
+    },
+    {
+      "token": "expert_system",
+      "avg_prob": 0.0011415567087869232
+    },
+    {
+      "token": "detector",
+      "avg_prob": 0.0011319557289915304
+    },
+    {
+      "token": "typography",
+      "avg_prob": 0.0011289935489546131
+    },
+    {
+      "token": "grammar",
+      "avg_prob": 0.0011082783687295606
+    },
+    {
+      "token": "electronics",
+      "avg_prob": 0.0011038052383810283
+    },
+    {
+      "token": "image_resolution",
+      "avg_prob": 0.0010903898593304412
+    },
+    {
+      "token": "enhanced_data_rates_for_gsm_evolution",
+      "avg_prob": 0.001056925352828727
+    }
+  ]
+}

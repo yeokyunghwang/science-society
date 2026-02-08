@@ -1,0 +1,214 @@
+{
+  "domain": "news",
+  "year": 1995,
+  "stage": "stage2",
+  "checkpoint_dir": "./checkpoints/annual_node/news/year=1995/stage2",
+  "corpus_path": "./corpus/news_1995.txt",
+  "target": "automation",
+  "distance": 2,
+  "topk": 50,
+  "max_contexts": 1000,
+  "num_contexts_used": 1000,
+  "predictions": [
+    {
+      "token": "[UNK]",
+      "avg_prob": 0.0849573874748312
+    },
+    {
+      "token": "automation",
+      "avg_prob": 0.012393213503383743
+    },
+    {
+      "token": "information_systems",
+      "avg_prob": 0.010370478871462488
+    },
+    {
+      "token": "software_industry",
+      "avg_prob": 0.009537109962780137
+    },
+    {
+      "token": "electronic_information_systems",
+      "avg_prob": 0.009464666685637306
+    },
+    {
+      "token": "software",
+      "avg_prob": 0.007783098831369792
+    },
+    {
+      "token": "product_introduction",
+      "avg_prob": 0.0071109623361171525
+    },
+    {
+      "token": "customer_services",
+      "avg_prob": 0.006708611941565179
+    },
+    {
+      "token": "service_introduction",
+      "avg_prob": 0.00667744299930944
+    },
+    {
+      "token": "pacific",
+      "avg_prob": 0.005922022042670838
+    },
+    {
+      "token": "product_lines",
+      "avg_prob": 0.005779329822591743
+    },
+    {
+      "token": "pornography_and_obscenity",
+      "avg_prob": 0.005381769954692572
+    },
+    {
+      "token": "banking_industry",
+      "avg_prob": 0.005339429393999161
+    },
+    {
+      "token": "north_central",
+      "avg_prob": 0.005217951581176428
+    },
+    {
+      "token": "internet",
+      "avg_prob": 0.005181104128132575
+    },
+    {
+      "token": "product_development",
+      "avg_prob": 0.0048590587834441866
+    },
+    {
+      "token": "employees",
+      "avg_prob": 0.004789700204424921
+    },
+    {
+      "token": "computers",
+      "avg_prob": 0.004706962246680632
+    },
+    {
+      "token": "corporate_profiles",
+      "avg_prob": 0.0046366866085208345
+    },
+    {
+      "token": "ice_hockey",
+      "avg_prob": 0.004329369091932234
+    },
+    {
+      "token": "electronic_mail",
+      "avg_prob": 0.00430133815798736
+    },
+    {
+      "token": "technology",
+      "avg_prob": 0.004298710182535171
+    },
+    {
+      "token": "executives",
+      "avg_prob": 0.004236980062626933
+    },
+    {
+      "token": "electronics_industry",
+      "avg_prob": 0.004150643285844563
+    },
+    {
+      "token": "alliances",
+      "avg_prob": 0.004073976092920844
+    },
+    {
+      "token": "software_products",
+      "avg_prob": 0.003997037048361836
+    },
+    {
+      "token": "small_business",
+      "avg_prob": 0.003969176365248098
+    },
+    {
+      "token": "southwest",
+      "avg_prob": 0.0038088019921698147
+    },
+    {
+      "token": "marketing",
+      "avg_prob": 0.0037995158938497727
+    },
+    {
+      "token": "television_sports",
+      "avg_prob": 0.003790885879425332
+    },
+    {
+      "token": "manufacturing",
+      "avg_prob": 0.0037862924563156594
+    },
+    {
+      "token": "financial_statements",
+      "avg_prob": 0.003764340395091808
+    },
+    {
+      "token": "personal_profiles",
+      "avg_prob": 0.003726884415736488
+    },
+    {
+      "token": "telephones_and_telecommunications",
+      "avg_prob": 0.0036817574478586073
+    },
+    {
+      "token": "trends",
+      "avg_prob": 0.0036370474547966604
+    },
+    {
+      "token": "robots",
+      "avg_prob": 0.003635675507791768
+    },
+    {
+      "token": "computer_industry",
+      "avg_prob": 0.003622682010082703
+    },
+    {
+      "token": "information_superhighway",
+      "avg_prob": 0.003619680111576994
+    },
+    {
+      "token": "personal_computers",
+      "avg_prob": 0.0035800210443203864
+    },
+    {
+      "token": "mountain",
+      "avg_prob": 0.003495005663359058
+    },
+    {
+      "token": "cost_control",
+      "avg_prob": 0.003482053787589338
+    },
+    {
+      "token": "new_england",
+      "avg_prob": 0.0034802296936669082
+    },
+    {
+      "token": "labor_negotiations",
+      "avg_prob": 0.00346155691659078
+    },
+    {
+      "token": "manufacturers",
+      "avg_prob": 0.003460727459880553
+    },
+    {
+      "token": "terrorism",
+      "avg_prob": 0.0034339539090390593
+    },
+    {
+      "token": "television",
+      "avg_prob": 0.0034204275413815466
+    },
+    {
+      "token": "softwareproducts",
+      "avg_prob": 0.0033768964931368828
+    },
+    {
+      "token": "compact_disk",
+      "avg_prob": 0.003373109666844372
+    },
+    {
+      "token": "bank_automation",
+      "avg_prob": 0.003365936917009012
+    },
+    {
+      "token": "engineers",
+      "avg_prob": 0.003355722043422922
+    }
+  ]
+}

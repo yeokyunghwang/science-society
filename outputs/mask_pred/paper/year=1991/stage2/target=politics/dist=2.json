@@ -1,0 +1,214 @@
+{
+  "domain": "paper",
+  "year": 1991,
+  "stage": "stage2",
+  "checkpoint_dir": "./checkpoints/annual_node/paper/year=1991/stage2",
+  "corpus_path": "./corpus/paper_1991.txt",
+  "target": "politics",
+  "distance": 2,
+  "topk": 50,
+  "max_contexts": 1000,
+  "num_contexts_used": 655,
+  "predictions": [
+    {
+      "token": "[UNK]",
+      "avg_prob": 0.5619257493783499
+    },
+    {
+      "token": "mathematics",
+      "avg_prob": 0.008869639250542257
+    },
+    {
+      "token": "physics",
+      "avg_prob": 0.0052395686219297065
+    },
+    {
+      "token": "biology",
+      "avg_prob": 0.0049706184936203915
+    },
+    {
+      "token": "philosophy",
+      "avg_prob": 0.002979919993176708
+    },
+    {
+      "token": "[PAD]",
+      "avg_prob": 0.0028993708496788647
+    },
+    {
+      "token": "psychology",
+      "avg_prob": 0.002889630819212304
+    },
+    {
+      "token": "management",
+      "avg_prob": 0.0026425792019856907
+    },
+    {
+      "token": "archaeology",
+      "avg_prob": 0.0025913346664560603
+    },
+    {
+      "token": "abstract_data_type",
+      "avg_prob": 0.002048400228395205
+    },
+    {
+      "token": "linguistics",
+      "avg_prob": 0.001990562113676938
+    },
+    {
+      "token": "genetic_algorithm",
+      "avg_prob": 0.001937790544177512
+    },
+    {
+      "token": "computer_science",
+      "avg_prob": 0.001922226064593836
+    },
+    {
+      "token": "inference",
+      "avg_prob": 0.0017648749764411504
+    },
+    {
+      "token": "geology",
+      "avg_prob": 0.0017266098789351758
+    },
+    {
+      "token": "[MASK]",
+      "avg_prob": 0.0016951315278251379
+    },
+    {
+      "token": "geometry",
+      "avg_prob": 0.0016763488173040567
+    },
+    {
+      "token": "cybernetics",
+      "avg_prob": 0.001673821118338225
+    },
+    {
+      "token": "probabilistic_logic",
+      "avg_prob": 0.0016637079218644222
+    },
+    {
+      "token": "gene",
+      "avg_prob": 0.0015349576488769975
+    },
+    {
+      "token": "music",
+      "avg_prob": 0.0014795068021796426
+    },
+    {
+      "token": "project_management",
+      "avg_prob": 0.0014664761612595515
+    },
+    {
+      "token": "aeronautics",
+      "avg_prob": 0.0014643993258988556
+    },
+    {
+      "token": "linear_algebra",
+      "avg_prob": 0.0014572086666696457
+    },
+    {
+      "token": "nonlinear_system",
+      "avg_prob": 0.0014531094522236753
+    },
+    {
+      "token": "grammar",
+      "avg_prob": 0.001386715775224174
+    },
+    {
+      "token": "graph_theory",
+      "avg_prob": 0.0013683234739180078
+    },
+    {
+      "token": "punctuation",
+      "avg_prob": 0.0013590099116723331
+    },
+    {
+      "token": "computer_programming",
+      "avg_prob": 0.00135160330531935
+    },
+    {
+      "token": "typography",
+      "avg_prob": 0.0013278262553743678
+    },
+    {
+      "token": "logic",
+      "avg_prob": 0.0013270186523542456
+    },
+    {
+      "token": "situated",
+      "avg_prob": 0.0013047022787669232
+    },
+    {
+      "token": "politics",
+      "avg_prob": 0.0012703799790700202
+    },
+    {
+      "token": "salient",
+      "avg_prob": 0.0012433392481828634
+    },
+    {
+      "token": "engineering",
+      "avg_prob": 0.0011966333842140162
+    },
+    {
+      "token": "signal_processing",
+      "avg_prob": 0.0011836573515949908
+    },
+    {
+      "token": "expert_system",
+      "avg_prob": 0.0011534424770609226
+    },
+    {
+      "token": "software",
+      "avg_prob": 0.0011283800293084895
+    },
+    {
+      "token": "population",
+      "avg_prob": 0.001126850818975049
+    },
+    {
+      "token": "detector",
+      "avg_prob": 0.0010997097743746206
+    },
+    {
+      "token": "heuristic",
+      "avg_prob": 0.0010578786704720593
+    },
+    {
+      "token": "education",
+      "avg_prob": 0.0010337622372889928
+    },
+    {
+      "token": "public_health",
+      "avg_prob": 0.0010258641317937923
+    },
+    {
+      "token": "perception",
+      "avg_prob": 0.0010068862175103277
+    },
+    {
+      "token": "optics",
+      "avg_prob": 0.0010007365597770191
+    },
+    {
+      "token": "chemistry",
+      "avg_prob": 0.0009746942184089372
+    },
+    {
+      "token": "visualization",
+      "avg_prob": 0.000965557767647422
+    },
+    {
+      "token": "telecommunications",
+      "avg_prob": 0.0009314563936793697
+    },
+    {
+      "token": "economics",
+      "avg_prob": 0.000925863375034422
+    },
+    {
+      "token": "vision",
+      "avg_prob": 0.0009253980377183805
+    }
+  ]
+}
