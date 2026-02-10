@@ -86,6 +86,7 @@ class NodeControlledMLMCollator(DataCollatorForLanguageModeling):
         node_token_ids: Set[int],
         mlm: bool = True,
         mlm_probability: float = 0.15,  # (여기선 의미 거의 없음. parent 요구로 둠)
+        exact_k_masks: int = 1,
         mask_replace_prob: float = 1.0,
         random_replace_prob: float = 0.0,
     ):
@@ -97,6 +98,7 @@ class NodeControlledMLMCollator(DataCollatorForLanguageModeling):
             raise ValueError("mask_replace_prob + random_replace_prob must be <= 1.0")
 
         self.node_token_ids = set(int(x) for x in node_token_ids)
+        self.exact_k_masks = int(exact_k_masks)
         self.mask_replace_prob = float(mask_replace_prob)
         self.random_replace_prob = float(random_replace_prob)
 
@@ -114,23 +116,27 @@ class NodeControlledMLMCollator(DataCollatorForLanguageModeling):
         node_pos_mask = torch.isin(inputs, node_ids)
 
         B, L = inputs.shape
+        K = self.exact_k_masks
+        
         for b in range(B):
             pos = torch.nonzero(node_pos_mask[b], as_tuple=False).flatten()
             if pos.numel() == 0:
                 continue
 
-            j = pos[torch.randint(pos.numel(), (1,), device=device).item()].item()
+            k = min(K, pos.numel())
+            chosen = pos[torch.randperm(pos.numel(), device=device)[:k]]
 
-            # set label
-            labels[b, j] = inputs[b, j]
-
-            # replacement policy
-            r = torch.rand((), device=device).item()
-            if r < self.mask_replace_prob:
-                inputs[b, j] = self.tokenizer.mask_token_id
-            elif r < self.mask_replace_prob + self.random_replace_prob:
-                inputs[b, j] = node_ids[torch.randint(len(node_ids), (1,), device=device).item()]
-            else:
-                pass  # keep
+            for j in chosen.tolist():
+                labels[b, j] = inputs[b, j]
+    
+                r = torch.rand((), device=device).item()
+                if r < self.mask_replace_prob:
+                    inputs[b, j] = self.tokenizer.mask_token_id
+                elif r < self.mask_replace_prob + self.random_replace_prob:
+                    inputs[b, j] = node_ids[
+                        torch.randint(len(node_ids), (1,), device=device).item()
+                    ]
+                else:
+                    pass  # keep original
 
         return inputs, labels

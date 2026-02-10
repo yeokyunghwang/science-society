@@ -133,6 +133,9 @@ def main():
     ap.add_argument("--max_len", type=int, default=64)
     ap.add_argument("--eval_ratio", type=float, default=0.01)
     ap.add_argument("--seed", type=int, default=42)
+    
+    ap.add_argument("--mask_replace_prob", type=float, default=0.9)
+    ap.add_argument("--random_replace_prob", type=float, default=0.05)
 
     # 학습 하이퍼
     ap.add_argument("--num_train_epochs", type=float, default=3.0)
@@ -197,8 +200,9 @@ def main():
         collator = NodeControlledMLMCollator(
             tokenizer=tokenizer,
             node_token_ids=node_token_ids,
-            mask_replace_prob=0.9,
-            random_replace_prob=0.0,
+            exact_k_masks=args.exact_k_masks,
+            mask_replace_prob=args.mask_replace_prob,
+            random_replace_prob=args.random_replace_prob,
         )
 
 

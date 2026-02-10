@@ -120,6 +120,8 @@ def main():
     ap.add_argument("--seed", type=int, default=42)
 
     ap.add_argument("--mlm_prob", type=float, default=0.15)
+    ap.add_argument("--mask_replace_prob", type=float, default=0.9)
+    ap.add_argument("--random_replace_prob", type=float, default=0.15)
     ap.add_argument("--num_train_epochs", type=float, default=3.0)
     ap.add_argument("--per_device_train_batch_size", type=int, default=32)
     ap.add_argument("--per_device_eval_batch_size", type=int, default=32)
@@ -172,9 +174,9 @@ def main():
     collator = NodeOnlyMLMCollator(
         tokenizer=tokenizer,
         node_token_ids=node_token_ids,
-        mlm_probability=0.15,
-        mask_replace_prob=0.9,
-        random_replace_prob=0.0,
+        mlm_probability=args.mlm_prob,
+        mask_replace_prob=args.mask_replace_prob,
+        random_replace_prob=args.random_replace_prob,
     )
 
     # 8) Trainer
