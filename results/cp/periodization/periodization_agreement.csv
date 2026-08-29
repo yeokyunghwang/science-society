@@ -1,0 +1,7 @@
+variant,pair,dK,hausdorff,rand,F1(±2y)
+raw,news vs paper,2,4.0,0.814,0.0
+raw,news vs joint,2,5.0,0.884,0.5
+raw,paper vs joint,0,2.0,0.903,0.6
+detrended,news vs paper,1,6.0,0.763,0.4
+detrended,news vs joint,0,1.0,0.966,1.0
+detrended,paper vs joint,1,6.0,0.771,0.4

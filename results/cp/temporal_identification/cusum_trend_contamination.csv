@@ -1,0 +1,5 @@
+slope_strength,false_positive_rate,median_p
+0.0,0.01,0.4075
+0.5,0.3,0.075
+1.0,0.87,0.02
+1.5,0.97,0.01

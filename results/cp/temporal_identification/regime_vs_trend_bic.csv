@@ -1,0 +1,9 @@
+source,model,k,R2,BIC,dBIC
+news,M0 constant,6,0.0,25.52,195.89
+news,M1 linear trend,12,0.6217,-135.19,35.18
+news,M2 piecewise-constant (=3.6.2 결과),20,0.6792,-125.58,44.79
+news,M3 trend + level shift,26,0.7821,-170.37,0.0
+paper,M0 constant,6,0.0,22.83,302.13
+paper,M1 linear trend,12,0.8148,-279.3,0.0
+paper,M2 piecewise-constant (=3.6.2 결과),20,0.7665,-191.12,88.18
+paper,M3 trend + level shift,26,0.844,-239.32,39.98
