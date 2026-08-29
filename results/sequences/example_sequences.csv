@@ -1,0 +1,29 @@
+set,corpus,category,sequence,rank_1995,rank_2023,news_rank_pct_1995_2023,paper_rank_pct_1995_2023,late_slope_pct_per_yr
+own,news,most settled 2023,chief executive officers -> automation -> executives -> information systems -> internet -> software,74,4,,,
+own,news,most settled 2023,collaboration -> alliances -> financial services -> acquisitions & mergers -> software industry -> software,173,10,,,
+own,news,most settled 2023,automation -> executives -> marketing -> customer services -> alliances -> employees,67,10,,,
+own,news,largest drop 1995-2023,chief executive officers -> software industry -> information systems -> marketing -> websites -> software,286,11,,,
+own,news,largest drop 1995-2023,financial services -> alliances -> infrastructure -> customer services -> information systems -> research & development--r&d,266,10,,,
+own,news,largest drop 1995-2023,software -> advisors -> alliances -> information systems -> infrastructure -> trademarks,269,14,,,
+own,news,did not settle,algorithms -> design -> libraries -> automation -> windows operating system -> software,34,192,,,
+own,news,did not settle,service introduction -> information services -> automation -> computer industry -> personal computers -> software,45,194,,,
+own,paper,most settled 2023,key (lock) -> work (physics) -> gene -> space (punctuation) -> property (philosophy) -> pattern recognition (psychology),54,26,,,
+own,paper,most settled 2023,task (project management) -> scheme (mathematics) -> point (geometry) -> feature (linguistics) -> scale (ratio) -> work (physics),54,32,,,
+own,paper,most settled 2023,fuzzy logic -> function (biology) -> gene -> constraint (computer-aided design) -> motion (physics) -> identification (biology),68,35,,,
+own,paper,largest drop 1995-2023,consistency (knowledge bases) -> key (lock) -> hierarchy -> order (exchange) -> process (computing) -> java,712,98,,,
+own,paper,largest drop 1995-2023,activity recognition -> pattern recognition (psychology) -> extraction (chemistry) -> resolution (logic) -> contrast (vision) -> population,2995,417,,,
+own,paper,largest drop 1995-2023,order (exchange) -> task (project management) -> adaptation (eye) -> personalization -> recommender system -> the internet,2291,398,,,
+own,paper,did not settle,analytical chemistry (journal) -> elution -> resolution (logic) -> layer (electronics) -> pixel -> software,248,1073,,,
+own,paper,did not settle,analytical chemistry (journal) -> elution -> resolution (logic) -> microscope -> image (mathematics) -> phase noise,344,1341,,,
+shared,both,both settle,architecture -> automation -> health care -> software -> outsourcing,,,13.14->1.46,5.60->1.51,news -1.04 / paper -2.37
+shared,both,both settle,architecture -> software -> health care -> automation -> outsourcing,,,13.14->1.46,5.60->1.51,news -1.04 / paper -2.37
+shared,both,both settle,local government -> automation -> health care -> software -> outsourcing,,,12.93->1.94,9.50->2.37,news -2.41 / paper -1.61
+shared,both,both settle,certification -> automation -> customer satisfaction -> software -> outsourcing,,,16.18->1.41,13.12->4.15,news -2.21 / paper -3.18
+shared,both,"news settles, paper does not",cost control -> software -> venture capital -> automation -> financial services,,,7.68->0.17,16.65->10.60,news -7.86 / paper +0.01
+shared,both,"news settles, paper does not",cost control -> manufacturing -> automation -> venture capital -> software,,,7.00->0.22,16.00->10.84,news -7.11 / paper -0.58
+shared,both,"news settles, paper does not",certification -> software -> venture capital -> automation -> financial services,,,13.93->0.32,12.21->7.27,news -6.91 / paper -0.43
+shared,both,"news settles, paper does not",automation -> venture capital -> software -> cost control -> manufacturing,,,7.31->0.26,19.82->13.66,news -6.32 / paper +0.15
+shared,both,"paper settles, news does not",cost reduction -> software -> security management -> automation -> information management,,,2.84->0.65,20.90->13.93,news +4.35 / paper -0.12
+shared,both,"paper settles, news does not",information management -> software -> cost reduction -> automation -> security management,,,4.99->0.74,19.38->11.09,news +4.36 / paper -0.11
+shared,both,"paper settles, news does not",information technology -> automation -> cost reduction -> software -> security management,,,6.29->0.58,17.64->9.64,news +3.72 / paper -0.71
+shared,both,"paper settles, news does not",cost control -> cost reduction -> automation -> security management -> software,,,5.48->0.71,28.55->17.90,news +4.11 / paper -0.26

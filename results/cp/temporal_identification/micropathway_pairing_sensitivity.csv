@@ -1,0 +1,15 @@
+pair_tol,paper_year,news_year,lag,label
+2,2002.0,,,Latent technical accumulation
+2,2013.0,,,Latent technical accumulation
+2,,1998.0,,Public-first reconfiguration
+2,,2017.0,,Public-first reconfiguration
+3,2002.0,,,Latent technical accumulation
+3,2013.0,,,Latent technical accumulation
+3,,1998.0,,Public-first reconfiguration
+3,,2017.0,,Public-first reconfiguration
+4,2002.0,1998.0,-4.0,Ordered cross-arena alignment (news leads)
+4,2013.0,2017.0,4.0,Ordered cross-arena alignment (paper leads)
+5,2002.0,1998.0,-4.0,Ordered cross-arena alignment (news leads)
+5,2013.0,2017.0,4.0,Ordered cross-arena alignment (paper leads)
+6,2002.0,1998.0,-4.0,Ordered cross-arena alignment (news leads)
+6,2013.0,2017.0,4.0,Ordered cross-arena alignment (paper leads)

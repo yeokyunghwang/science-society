@@ -1,0 +1,56 @@
+# ─────────────────────────────────────────────────────────────────────
+#  Data and model artefacts are not tracked.
+#
+#  Only the raw subject-term files are irreducible input; notebooks 01 and
+#  02 rebuild everything under data/processed/ and models/ from them, and
+#  notebook 05 rebuilds the backbone, cores and main paths.
+#
+#  A three-year sample of the news corpus IS tracked, and it sits at the
+#  exact paths the notebooks read from. Dropping the full files into the
+#  same folders is all it takes to go from sample to full run.
+# ─────────────────────────────────────────────────────────────────────
+/data/*
+!/data/raw/
+!/data/processed/
+/data/raw/*
+!/data/raw/.gitkeep
+/data/processed/*
+!/data/processed/embeddings/
+!/data/processed/lexical/
+!/data/processed/networks_emb/
+
+/data/processed/embeddings/*
+!/data/processed/embeddings/*_sample.npy
+
+/data/processed/lexical/*
+!/data/processed/lexical/news_1995_lex_adj_f.npz
+!/data/processed/lexical/news_2010_lex_adj_f.npz
+!/data/processed/lexical/news_2023_lex_adj_f.npz
+!/data/processed/lexical/base_idx.pkl
+!/data/processed/lexical/base_vocab.pkl
+!/data/processed/lexical/lexical_graph_summary_filtered.csv
+!/data/processed/lexical/subject_lexical_summary.csv
+
+/data/processed/networks_emb/*
+!/data/processed/networks_emb/news_1995_adj_f.npz
+!/data/processed/networks_emb/news_2010_adj_f.npz
+!/data/processed/networks_emb/news_2023_adj_f.npz
+!/data/processed/networks_emb/*.pkl
+!/data/processed/networks_emb/*_member.npy
+!/data/processed/networks_emb/keep_idx.npy
+!/data/processed/networks_emb/old_to_new.npy
+!/data/processed/networks_emb/*_summary.csv
+
+# Checkpoints are 8.9 MB each and rebuilt by notebook 02; the training
+# curves next to them are a few hundred bytes and worth keeping.
+/models/*
+!/models/*_train_history.csv
+
+# Superseded material, kept locally
+/_superseded/
+
+# Editor / OS
+.ipynb_checkpoints/
+__pycache__/
+*.pyc
+.DS_Store
