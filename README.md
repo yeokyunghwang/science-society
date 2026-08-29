@@ -25,13 +25,12 @@ models/           Trained DySAT checkpoints
 results/
   figures/        Figures
   cp/             Core–periphery indices, temporal identification, periodisation
-  tables/         Backbone, core, main-path and persistence tables
+  tables/         Backbone, vocabulary and persistence tables
   sequences/      Sequence perplexity outputs
 check_setup.py    One-command environment check against the bundled sample
 ```
 
-Results are summarised in this file. The long-form reports they condense are kept
-locally in `_superseded/` and are not tracked.
+Results are summarised in this file.
 
 ## Pipeline
 
@@ -64,7 +63,7 @@ place and nowhere else** — 04 holds no values of its own.
 ```python
 # 04_figures.ipynb — nothing hard-coded
 PERIOD_CSV     = Path("../results/cp/periodization/periodization_main.csv")
-PERIOD_VARIANT = "raw"      # "raw" | "detrended"
+PERIOD_VARIANT = "detrended"   # "raw" | "detrended"
 PERIOD_SPEC    = "joint"    # "joint" | "news" | "paper"
 AI_PERIODS     = load_periods()
 ```
@@ -112,7 +111,7 @@ them in: set `SCISOC_RAW` to wherever they live and notebooks 01 and 02 will rea
 SCISOC_RAW=/Volumes/MyDrive/scisoc_raw jupyter lab
 ```
 
-Notebooks 03 to 06 need no raw input at all; they run off `data/processed/`. Retraining takes
+Notebooks 03 to 05 need no raw input at all; they run off `data/processed/`. Retraining takes
 a GPU and several hours, so copying `data/processed/` across is usually easier than rebuilding
 it. Ask the author for either the raw input or the derived files.
 
@@ -151,8 +150,9 @@ data/processed/lexical/subject_lexical_summary.csv        concept → lexical ba
 models/{news,paper}_lexical_dysat_train_history.csv       training curves
 ```
 
-Two megabytes in total. The DySAT checkpoints themselves are 8.9 MB each and notebook 02
-rebuilds them, so only the training curves beside them are tracked.
+About 20 MB in total, most of it the embedding sample. The DySAT checkpoints themselves
+are 8.9 MB each and notebook 02 rebuilds them, so only the training curves beside them are
+tracked.
 
 Concept names and edge persistence windows are in [`results/tables/`](results/tables/) in
 full. Check the environment:
@@ -162,14 +162,15 @@ python check_setup.py
 ```
 
 ```
-Embedding (3, 29312, 32)   vocabulary 29,312
+Embedding (3, 29312, 32)   (3 years x 29,312 concepts x 32 dims)
+Vocabulary 29,312
 
-1995  active concepts  2,496   median rank of the true neighbour   438   (chance: 1,248)
-2010  active concepts  5,617                                       513   (chance: 2,808)
-2023  active concepts  7,560                                       380   (chance: 3,780)
+1995  active concepts  2,496   median rank of the true neighbour    438   (chance: 1,248)
+2010  active concepts  5,617   median rank of the true neighbour    513   (chance: 2,808)
+2023  active concepts  7,560   median rank of the true neighbour    380   (chance: 3,780)
 ```
 
-Notebook 06 loads the full embedding when present and falls back to the sample with a
+Notebook 05 loads the full embedding when present and falls back to the sample with a
 warning when not. **The sample cannot reproduce the published numbers.**
 
 Notebooks resolve paths relative to `notebooks/`, so run them from there:
@@ -235,8 +236,8 @@ highest agreement any specification reaches, with boundary frequencies of 0.93, 
 0.71. It reproduces the news-only fit almost exactly — Hausdorff 1.0, Rand 0.966, F1 1.0
 within ±2 years, the best agreement in the table. It does not move when the minimum segment
 length is set to 5, 6 or 7 years. And the quadratic and Gaussian-kernel costs return
-1998, 2009, 2017 and 1998, 2010, 2017. The raw joint fit, which the figures used before, is
-not stable in the same way: BIC selects K = 5 there while the modal bootstrap K is 4
+1998, 2009, 2017 and 1998, 2010, 2017. The raw joint fit is not stable in the same way:
+BIC selects K = 5 there while the modal bootstrap K is 4
 (0.51 against 0.384). Only 1998 survives everything — it appears in four of the six
 specifications and never below frequency 0.92 in a bootstrap that contains it.
 
@@ -268,11 +269,11 @@ the edges differ.
 
 Three residual issues to carry into any reading of the backbone results:
 
-1. **The news retained-weight share is unstable**, swinging 49.4–71.1% (sd 0.041) and
-   correlating −0.62 with that year's edge density. Papers are steady at 52.7–56.9%
-   (sd 0.008), so this is a news-side confound.
-2. **News 1991 is an outlier** — 1,538 nodes and 14,386 edges against roughly 2,300 and
-   38,000 in the surrounding years, and ten components even after the spanning tree. This
+1. **The news retained-weight share is unstable**, swinging 48.4–67.8% (sd 0.037) and
+   correlating −0.52 with that year's edge density. Papers are steady at 52.0–56.4%
+   (sd 0.010), so this is a news-side confound.
+2. **News 1991 is an outlier** — 1,538 nodes and 14,386 edges against 2,260 and 40,084 in
+   1990 and 2,306 and 38,797 in 1992, and ten components even after the spanning tree. This
    looks like a collection artefact and the year should be handled separately.
 3. **Node counts differ from the core–periphery tables**, because the backbone runs on the
    29,312-concept filtered vocabulary to stay index-aligned with the embedding. News 1990
@@ -298,6 +299,15 @@ min(α_ij, α_ji) on this data.
 
 ## Environment
 
-`numpy`, `pandas`, `scipy`, `matplotlib`, `networkx`. Notebook 01 additionally needs
-`cpnet`, 02 needs `torch`, and 04 needs `ruptures`. Nothing else needs `torch` — `.pt`
-files are read as zip archives of raw float32.
+`numpy`, `pandas`, `scipy` and `matplotlib` throughout. Beyond those:
+
+| notebook | also needs |
+|---|---|
+| 01 | `cpnet`, `lifelines`, `joblib`, `seaborn`, `tqdm`, `tqdm_joblib` |
+| 02 | `torch`, `scikit-learn`, `spacy` with `en_core_web_sm`, `nltk`, `joblib`, `seaborn`, `tqdm` |
+| 03 | `torch`, `ruptures`, `changepoint` |
+| 04 | `torch`, `seaborn`, `tqdm` |
+| 05 | `networkx` |
+
+Notebook 05 reads the `.pt` embeddings as zip archives of raw float32, so it needs no
+`torch` of its own.
