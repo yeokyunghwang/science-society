@@ -274,20 +274,6 @@ min(α_ij, α_ji) on this data.
   persist for twenty years or more in both corpora, and eleven of them have `software` as
   an endpoint.
 
-## Reading the results
-
-1. **1990–1992 is not interpretable.** The causal mask leaves the temporal attention layer
-   with almost no past to attend to in the earliest years. A matched control shows the
-   same collapse, so this is model warm-up rather than conceptual novelty.
-2. **News is interpretable only from 1998.** Active concepts jump from 2,606 to 4,348 in
-   1998 — a change in corpus coverage.
-3. **The embedding softmax is not calibrated.** Training used one positive against one
-   uniformly sampled negative, so absolute perplexity means little. Read ranks, or changes
-   between periods.
-4. **Polysemous hubs.** The most connected concepts on the paper side include
-   `control (management)`, `image (mathematics)` and `class (philosophy)`, which span
-   unrelated fields. Any qualitative reading of an individual chain has to say so.
-
 ## Environment
 
 `numpy`, `pandas`, `scipy`, `matplotlib`, `networkx`. Notebook 01 additionally needs
