@@ -3,7 +3,7 @@
 #
 #  Only the raw subject-term files are irreducible input; notebooks 01 and
 #  02 rebuild everything under data/processed/ and models/ from them, and
-#  notebook 05 rebuilds the backbone, cores and main paths.
+#  notebook 05 rebuilds the backbone.
 #
 #  A three-year sample of the news corpus IS tracked, and it sits at the
 #  exact paths the notebooks read from. Dropping the full files into the

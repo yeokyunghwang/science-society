@@ -20,7 +20,7 @@ data/
   processed/
     networks_cp/  Yearly graphs on that year's own vocabulary (notebook 01)
     networks_emb/ The same graphs on one vocabulary fixed across all 34 years (02)
-    lexical/ embeddings/ backbone/ cores/ mainpath/
+    lexical/ embeddings/ backbone/
 models/           Trained DySAT checkpoints
 results/
   figures/        Figures
@@ -41,7 +41,7 @@ locally in `_superseded/` and are not tracked.
 | 02 | [`02_embedding_pipeline`](notebooks/02_embedding_pipeline.ipynb) | Trains **LexicalDySAT**, a DySAT variant with a lexical-neighbour attention layer inserted before the co-occurrence layer. Output: `[34 years × 29,312 concepts × 32 dims]` |
 | 03 | [`03_temporal_identification`](notebooks/03_temporal_identification.ipynb) | Assembles the indices from 01 and 02 into **yearly state vectors**, screens for change points through three independent layers, tests cross-arena ordering and persistence, and **fixes the period boundaries** (§3.8) — model selection, agreement across specifications, robustness, bootstrap stability |
 | 04 | [`04_figures`](notebooks/04_figures.ipynb) | Draws the **manuscript figures**. Runs no new analysis; period shading is read from 03's output rather than hard-coded |
-| 05 | [`05_backbone_sequence_perplexity`](notebooks/05_backbone_sequence_perplexity.ipynb) | **Backbone → core → main path → edge persistence → persistent concept chains → yearly perplexity.** One continuous process, so one notebook |
+| 05 | [`05_backbone_sequence_perplexity`](notebooks/05_backbone_sequence_perplexity.ipynb) | **Backbone → edge persistence → persistent concept chains → yearly perplexity.** One continuous process, so one notebook |
 
 ### How the stages depend on each other
 
@@ -90,7 +90,7 @@ the choice.
 Nothing under `data/` or `models/` is tracked. Only the raw subject-term files are
 irreducible input; given those, **notebooks 01 and 02 rebuild everything** — both sets of
 co-occurrence networks, the lexical resources, the model checkpoints and the embedding
-tensors — and notebook 05 rebuilds the backbone, cores and main paths.
+tensors — and notebook 05 rebuilds the backbone.
 
 ```
 data/raw/{news,paper}_subject_by_year.pkl          supply this yourself
@@ -102,7 +102,7 @@ data/processed/lexical/
 data/processed/embeddings/{news,paper}_embeddings.pt   122 MB each
 models/{news,paper}_lexical_dysat.pt
     ↓ notebook 05
-data/processed/{backbone,cores,mainpath}/
+data/processed/backbone/
 ```
 
 The raw files are large and are usually kept on an external drive. There is no need to copy
