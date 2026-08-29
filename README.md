@@ -183,10 +183,9 @@ cd notebooks && jupyter lab
 ### Period identification — notebook 03, §3.6–3.7
 
 Change points survive all three screening layers at **1998 and 2017 in news** and at
-**2002 and 2013 in papers**. Whether those points delimit real periods differs by arena.
-On a regime-versus-trend test the news series supports a period structure — three of four
-tests, though the decisive bootstrap likelihood-ratio sits at p = 0.048, which is weak —
-while the paper series fails all four. The paper breakpoints cut a straight line.
+**2002 and 2013 in papers**.
+Whether those points delimit periods rather than cut a trend is tested in §3.8 below; the
+short answer is that news weakly supports a period structure and papers do not.
 
 Two results look stronger than they are and should not be reported at face value.
 
@@ -210,31 +209,54 @@ the second question, in advance.
 
 ### Periodisation — notebook 03, §3.8
 
-BIC under a piecewise-constant model selects four segments with boundaries at **1998, 2006
-and 2017**; a quadratic cost and a Gaussian kernel cost give the identical partition.
+Boundaries are fitted to the 1991–2023 state vector by exact dynamic programming under a
+piecewise-constant model, K chosen by BIC with penalty β = σ̂²·d·log T and segments held to
+at least five years. Six specifications run: each arena alone (d = 6) and the two jointly
+(d = 12), on the raw series and on the series with a global linear trend removed.
 
 ```
-P1  1991–1997      P2  1998–2005      P3  2006–2016      P4  2017–2023
+variant     spec     K   boundaries
+raw         news     3   1998, 2009, 2017
+raw         paper    5   1996, 2002, 2007, 2013, 2019
+raw         joint    5   1998, 2003, 2009, 2014, 2019
+detrended   news     3   1998, 2010, 2017
+detrended   paper    2   2003, 2016
+detrended   joint    3   1998, 2009, 2017
 ```
 
-Boundary confidence is very uneven. Across the ten best-scoring partitions, 1998 appears in
-all ten under both cost functions, 2017 in five or six, and 2006 in only two — 2006 could
-sit anywhere between 2004 and 2009.
+**The reported partition is the detrended joint fit**, and the figures shade it:
 
-This is a descriptive segmentation of the indicator state, not evidence of discontinuity.
-Under a model allowing a linear trend with level shifts, BIC prefers no shifts at all, and a
-bootstrap test against a trend-only null does not reject at one, two or three shifts
-(p = 0.248, 0.088, 0.090). An independent test at the network level, which uses no derived
-indicators, rejected exchangeability for the sequence as a whole but localised nothing:
-90–93% of candidate positions cleared the null threshold — the signature of a gradual
-gradient — and the two graph constructions agreed on one of six recursively estimated
-boundaries. Corpus growth is also not fully controlled: residual correlation is +0.46 to
-+0.62 even under the dissimilarity design.
+```
+P1  1991–1997      P2  1998–2008      P3  2009–2016      P4  2017–2023
+```
 
-> **These numbers predate the current §3.8.** They come from an earlier
-> implementation whose outputs (`periodization_final.csv`, `A_model_selection.csv` and the
-> rest) §3.8 no longer writes. Re-run notebook 03 and rewrite this section from
-> `periodization_main.csv` before any of it goes into the manuscript.
+Four things pick that specification out. Bootstrap resampling puts K = 3 at 0.908, the
+highest agreement any specification reaches, with boundary frequencies of 0.93, 0.86 and
+0.71. It reproduces the news-only fit almost exactly — Hausdorff 1.0, Rand 0.966, F1 1.0
+within ±2 years, the best agreement in the table. It does not move when the minimum segment
+length is set to 5, 6 or 7 years. And the quadratic and Gaussian-kernel costs return
+1998, 2009, 2017 and 1998, 2010, 2017. The raw joint fit, which the figures used before, is
+not stable in the same way: BIC selects K = 5 there while the modal bootstrap K is 4
+(0.51 against 0.384). Only 1998 survives everything — it appears in four of the six
+specifications and never below frequency 0.92 in a bootstrap that contains it.
+
+**This is a descriptive partition, not evidence of discontinuity.** The six measures are
+badly collinear with the year itself: M correlates 0.995 with year in news and 1.000 in
+papers, and five of the six clear |r| ≥ 0.85 on the paper side. Comparing models on the
+state vector directly, papers are best explained by a plain linear trend — it beats the
+piecewise-constant fit by 88 BIC points and a trend-with-shifts model by 40 — while news
+prefers trend-with-shifts, leaving the piecewise-constant fit 45 points behind. A parametric
+bootstrap against a trend-only null rejects for news at p = 0.048, which is barely, and not
+for papers at p = 0.208. Detrending removes the CUSUM significance altogether (news
+0.014 → 0.261, papers 0.008 → 0.183), and a calibration run shows why: against a pure trend
+of moderate slope the CUSUM test fires 87% of the time. At the network level, where no
+derived indicator is involved, news prefers a three-block model over distance decay
+(BIC −181 against −28) while papers prefer distance decay by a wide margin (−646 against
+−71).
+
+The four segments therefore summarise the news trajectory and are a convenience for the
+paper one. Period shading in the figures is an axis annotation, not a claim that something
+broke in 1998, 2009 or 2017.
 
 ### Backbone — notebook 05, first stage
 
