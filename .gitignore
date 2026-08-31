@@ -62,3 +62,6 @@ __pycache__/
 
 # Notion 내보내기 등 압축 파일은 추적하지 않는다 (보고서는 reports/ 에 마크다운으로 둔다)
 *.zip
+
+# 발표 자료는 저장소에 두지 않는다 (로컬 파일로만 유지)
+/sequence_perplexity.pptx
