@@ -182,29 +182,8 @@ cd notebooks && jupyter lab
 
 ## Results
 
-두 갈래의 결과가 있다. 하나는 시기 구분(notebook 03), 하나는 개념 연쇄의 안정화
-(notebook 05)다.
-
-### 개념 연쇄의 안정화 — notebook 05
-
-**→ [`reports/2026-08-31_perplexity.md`](reports/2026-08-31_perplexity.md)** 에 방법과 결과가
-정리되어 있다. 요약하면:
-
-- 34년 중 20년 이상 끊기지 않고 백본에 남은 엣지가 **news 2,155개, paper 22,997개**다.
-  임계를 34년으로 올리면 격차가 10.7배에서 **59.3배**로 벌어진다.
-- 두 지속망이 공유하는 개념은 111개인데, 그 사이에서 양쪽 모두 20년 이상 지속되는
-  관계는 **12개뿐이고 쓸 수 있는 11개가 전부 `software`를 한쪽 끝으로 갖는다.**
-- 그 11개 관계를 경로 한가운데 고정하고 나머지 자리는 각 코퍼스가 자기 지속망에서
-  채우게 한 뒤 연도별 perplexity를 재면, **논문 쪽 연쇄는 2010년경 이미 멈췄고
-  (정규화 순위 2.19% → 2.09%, 13년) 뉴스 쪽은 아직 내려가는 중이다** (2.71% → 1.78%).
-  2009–2023 기울기 차 −2.38 %/년 [−2.82, −1.95], **11/11 앵커에서 부호 동일**, p < 0.0001.
-- 같은 관계를 지나면서도 나머지 자리를 채우는 어휘가 갈린다 — 뉴스는 기업·경영 담론,
-  논문은 추상적 방법 어휘.
-
-읽을 때의 제약이 셋 있다. **수준은 비교할 수 없고**(두 코퍼스가 각자 다른 임베딩
-모형에 다른 후보 풀을 쓴다), **PP는 인용하지 않으며**(softmax가 보정되어 있지 않다),
-**기울기의 크기가 아니라 방향만 정규화 선택에 독립적이다.** 대조군이 아직 없다는 것이
-현재 가장 큰 미완 부분이다. 자세한 것은 보고서 §5.
+Two strands. Notebook 03 fixes the period boundaries; notebook 05 measures whether concept
+chains stabilise. They are reported in notebook order below.
 
 ### Period identification — notebook 03, §3.6–3.7
 
@@ -283,6 +262,64 @@ derived indicator is involved, news prefers a three-block model over distance de
 The four segments therefore summarise the news trajectory and are a convenience for the
 paper one. Period shading in the figures is an axis annotation, not a claim that something
 broke in 1998, 2009 or 2017.
+
+### Concept-chain stabilisation — notebook 05
+
+Full write-up, with the figures and the reading constraints, in
+**[`reports/2026-08-31_perplexity.md`](reports/2026-08-31_perplexity.md)** (Korean).
+
+The backbone is extracted by the disparity filter (Serrano, Boguñá and Vespignani 2009)
+under a density rule rather than a fixed α: each year keeps |E| = 3N edges, unioned with
+the maximum spanning tree so the backbone stays connected. A fixed α would produce
+backbones of wildly different density across years and corpora, which cannot be compared.
+The filter is doing real work — against an equal-sized top-weight cut the Jaccard overlap
+is 0.58–0.71, so 30 to 40% of the edges differ.
+
+Four residual issues to carry into any reading of the backbone results:
+
+1. **The news retained-weight share is unstable**, swinging 48.4–67.8% (sd 0.037) and
+   correlating −0.52 with that year's edge density. Papers are steady at 52.0–56.4%
+   (sd 0.010), so this is a news-side confound.
+2. **News 1991 is an outlier** — 1,538 nodes and 14,386 edges against 2,260 and 40,084 in
+   1990 and 2,306 and 38,797 in 1992, and ten components even after the spanning tree. This
+   looks like a collection artefact and the year should be handled separately.
+3. **Node counts differ from the core–periphery tables**, because the backbone runs on the
+   29,312-concept filtered vocabulary to stay index-aligned with the embedding. News 1990
+   is 2,260 nodes here and 2,440 there.
+4. **A published reference implementation disagrees on 17% of edges.** It agrees on the
+   integral but does not apply the OR rule on undirected edges — it overwrites α as it
+   walks each endpoint, so the result depends on node order. Only 83.0% of edges matched
+   min(α_ij, α_ji) on this data.
+
+On top of that backbone:
+
+- **Persistent structure is asymmetric.** 2,155 news edges against 22,997 paper edges stay
+  in the backbone for 20 unbroken years. Raise the threshold to the full 34 years and the
+  gap widens from 10.7× to 59.3×. The two networks also differ in shape: the news
+  persistent graph is a star — `automation` is adjacent to 774 of its 863 nodes, median
+  degree 1 — while the paper one has 4,379 nodes at median degree 3.
+- **The two arenas share almost no persistent relational structure.** They have 111
+  concepts in common, but only twelve edges persist twenty years or more on both sides,
+  and **eleven of the twelve have `software` as an endpoint**. Those eleven are the
+  anchors; the twelfth yields no news path at all.
+- **Holding the relation fixed, paper chains have stopped and news chains have not.** With
+  an anchor pinned at the centre of the path and the remaining slots filled from each
+  corpus's own persistent graph, the paper trajectory is flat from 2010 (normalised rank
+  2.19% → 2.09% over thirteen years, raw rank 383 → 378) while news keeps falling
+  (2.71% → 1.78%). The paired difference in 2009–2023 slope is −2.38 %/yr
+  (95% CI −2.82 to −1.95, t(10) = −12.2), and **the sign is the same for all eleven
+  anchors**.
+- **Same relation, different surrounding vocabulary.** With the middle two positions
+  identical by construction, news fills the remaining slots with business and IT discourse
+  and paper with abstract method terms.
+
+Three constraints on reading those numbers. **Levels cannot be compared across corpora** —
+each is scored by its own embedding over its own candidate pool. **Perplexity should not be
+quoted**: the embedding was trained with a 1:1 positive-to-negative ratio, so its softmax
+is uncalibrated; rank is immune because it uses only the ordering. And **only the direction
+of the slope, not its size, is independent of the normalisation choice** — raw rank
+(−0.66 %/yr) and normalised rank (−2.88 %/yr) bracket the truth. There is no matched
+control yet, which is the largest unfinished part of this stage.
 
 ## Environment
 
