@@ -1,0 +1,45 @@
+anchor,source,rank_norm_2023,path
+architecture - software,news,0.83,customer services -> design -> architecture -> software -> product development -> research & development--r&d
+architecture - software,news,0.84,product development -> acquisitions & mergers -> software -> architecture -> design -> trademarks
+architecture - software,paper,0.16,image (mathematics) -> class (philosophy) -> software -> architecture -> order (exchange) -> property (philosophy)
+architecture - software,paper,0.19,class (philosophy) -> focus (optics) -> software -> architecture -> simple (philosophy) -> robot
+automation - software,news,0.08,alliances -> advisors -> software -> automation -> chief executive officers -> information systems
+automation - software,news,0.15,appointments & personnel changes -> information technology -> automation -> software -> customer services -> collaboration
+automation - software,paper,0.29,image (mathematics) -> cluster analysis -> software -> automation -> function (biology) -> point (geometry)
+automation - software,paper,0.32,context (archaeology) -> task (project management) -> automation -> software -> point (geometry) -> subject (documents)
+data collection - software,news,0.33,customers -> acquisitions & mergers -> software -> data collection -> automation -> stock exchanges
+data collection - software,news,0.35,boards of directors -> automation -> data collection -> software -> marketing -> financial services
+data collection - software,paper,0.27,context (archaeology) -> set (abstract data type) -> data collection -> software -> field (mathematics) -> variety (cybernetics)
+data collection - software,paper,0.31,categorization -> quality (philosophy) -> data collection -> software -> perspective (graphical) -> object (grammar)
+data processing - software,news,0.92,executives -> automation -> data processing -> software -> information technology -> software industry
+data processing - software,news,0.98,compliance -> executives -> software -> data processing -> automation -> venture capital
+data processing - software,paper,1.01,cognition -> simple (philosophy) -> software -> data processing -> image (mathematics) -> identification (biology)
+data processing - software,paper,1.02,construct (python library) -> pattern recognition (psychology) -> data processing -> software -> function (biology) -> point (geometry)
+interoperability - software,news,0.42,automation -> financial services -> software -> interoperability -> alliances -> research & development--r&d
+interoperability - software,news,0.42,awards & honors -> chief executive officers -> software -> interoperability -> information systems -> research & development--r&d
+interoperability - software,paper,0.58,identification (biology) -> object (grammar) -> interoperability -> software -> frame (networking) -> set (abstract data type)
+interoperability - software,paper,0.59,feature (linguistics) -> consistency (knowledge bases) -> interoperability -> software -> work (physics) -> identification (biology)
+medical imaging - software,news,1.11,marketing -> internet -> software -> medical imaging -> automation -> wireless networks
+medical imaging - software,news,1.12,consumers -> automation -> medical imaging -> software -> laboratories -> information systems
+medical imaging - software,paper,0.93,function (biology) -> focus (optics) -> software -> medical imaging -> segmentation -> pattern recognition (psychology)
+medical imaging - software,paper,0.97,measure (data warehouse) -> segmentation -> medical imaging -> software -> test (biology) -> population
+project management - software,news,0.74,marketing -> websites -> software -> project management -> automation -> stockholders
+project management - software,news,0.74,funding -> automation -> project management -> software -> marketing -> websites
+project management - software,paper,1.12,point (geometry) -> variety (cybernetics) -> project management -> software -> simple (philosophy) -> space (punctuation)
+project management - software,paper,1.12,pattern recognition (psychology) -> quality (philosophy) -> project management -> software -> state (computer science) -> work (physics)
+software - systems design,news,1.58,alliances -> advisors -> software -> systems design -> automation -> chief executive officers
+software - systems design,news,1.61,robots -> artificial intelligence -> software -> systems design -> automation -> startups
+software - systems design,paper,1.82,inference -> process (computing) -> systems design -> software -> object (grammar) -> pattern recognition (psychology)
+software - systems design,paper,1.82,image (mathematics) -> process (computing) -> systems design -> software -> graph -> simple (philosophy)
+software - usability,news,0.23,awards & honors -> customer services -> software -> usability -> automation -> executives
+software - usability,news,0.28,awards & honors -> chief executive officers -> software -> usability -> automation -> medical equipment
+software - usability,paper,0.35,class (philosophy) -> quality (philosophy) -> software -> usability -> variety (cybernetics) -> measure (data warehouse)
+software - usability,paper,0.38,class (philosophy) -> range (aeronautics) -> software -> usability -> quality (philosophy) -> image (mathematics)
+software - user interface,news,0.31,agreements -> automation -> user interface -> software -> software industry -> alliances
+software - user interface,news,0.35,alliances -> design -> user interface -> software -> infrastructure -> information systems
+software - user interface,paper,0.38,key (lock) -> process (computing) -> user interface -> software -> function (biology) -> signal (programming language)
+software - user interface,paper,0.41,exploit -> task (project management) -> user interface -> software -> work (physics) -> key (lock)
+software - visualization,news,0.58,software industry -> executives -> software -> visualization -> automation -> trademarks
+software - visualization,news,0.58,advisors -> automation -> visualization -> software -> research & development--r&d -> laboratories
+software - visualization,paper,0.27,constraint (computer-aided design) -> function (biology) -> software -> visualization -> work (physics) -> image (mathematics)
+software - visualization,paper,0.28,image (mathematics) -> presentation (obstetrics) -> visualization -> software -> measure (data warehouse) -> task (project management)

@@ -54,3 +54,8 @@
 __pycache__/
 *.pyc
 .DS_Store
+
+# 앵커 분석의 경로 수준 원자료 (75 MB). 노트북 §9.2가 재생성하며,
+# 요약본(anchor_per_anchor / anchor_summary / anchor_slopes / anchor_examples)과
+# 표본 경로 자체(anchor_seqs_*.npz)는 추적한다.
+/results/sequences/anchor_all.csv
