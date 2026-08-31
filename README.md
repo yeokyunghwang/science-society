@@ -7,7 +7,9 @@ latent position through dynamic graph embedding, period boundaries, and the
 stabilisation of concept chains.
 
 **Start here.** [Results](#results) summarises what each stage found and what it cannot
-support. For the code, read [`notebooks/`](notebooks/) in numbered order.
+support; the full write-up of the perplexity stage is in
+[`reports/2026-08-31_perplexity.md`](reports/2026-08-31_perplexity.md). For the code, read
+[`notebooks/`](notebooks/) in numbered order.
 
 ---
 
@@ -27,10 +29,9 @@ results/
   cp/             Core–periphery indices, temporal identification, periodisation
   tables/         Backbone, vocabulary and persistence tables
   sequences/      Sequence perplexity outputs
+reports/          Write-ups of what each stage found
 check_setup.py    One-command environment check against the bundled sample
 ```
-
-Results are summarised in this file.
 
 ## Pipeline
 
@@ -181,6 +182,30 @@ cd notebooks && jupyter lab
 
 ## Results
 
+두 갈래의 결과가 있다. 하나는 시기 구분(notebook 03), 하나는 개념 연쇄의 안정화
+(notebook 05)다.
+
+### 개념 연쇄의 안정화 — notebook 05
+
+**→ [`reports/2026-08-31_perplexity.md`](reports/2026-08-31_perplexity.md)** 에 방법과 결과가
+정리되어 있다. 요약하면:
+
+- 34년 중 20년 이상 끊기지 않고 백본에 남은 엣지가 **news 2,155개, paper 22,997개**다.
+  임계를 34년으로 올리면 격차가 10.7배에서 **59.3배**로 벌어진다.
+- 두 지속망이 공유하는 개념은 111개인데, 그 사이에서 양쪽 모두 20년 이상 지속되는
+  관계는 **12개뿐이고 쓸 수 있는 11개가 전부 `software`를 한쪽 끝으로 갖는다.**
+- 그 11개 관계를 경로 한가운데 고정하고 나머지 자리는 각 코퍼스가 자기 지속망에서
+  채우게 한 뒤 연도별 perplexity를 재면, **논문 쪽 연쇄는 2010년경 이미 멈췄고
+  (정규화 순위 2.19% → 2.09%, 13년) 뉴스 쪽은 아직 내려가는 중이다** (2.71% → 1.78%).
+  2009–2023 기울기 차 −2.38 %/년 [−2.82, −1.95], **11/11 앵커에서 부호 동일**, p < 0.0001.
+- 같은 관계를 지나면서도 나머지 자리를 채우는 어휘가 갈린다 — 뉴스는 기업·경영 담론,
+  논문은 추상적 방법 어휘.
+
+읽을 때의 제약이 셋 있다. **수준은 비교할 수 없고**(두 코퍼스가 각자 다른 임베딩
+모형에 다른 후보 풀을 쓴다), **PP는 인용하지 않으며**(softmax가 보정되어 있지 않다),
+**기울기의 크기가 아니라 방향만 정규화 선택에 독립적이다.** 대조군이 아직 없다는 것이
+현재 가장 큰 미완 부분이다. 자세한 것은 보고서 §5.
+
 ### Period identification — notebook 03, §3.6–3.7
 
 Change points survive all three screening layers at **1998 and 2017 in news** and at
@@ -258,134 +283,6 @@ derived indicator is involved, news prefers a three-block model over distance de
 The four segments therefore summarise the news trajectory and are a convenience for the
 paper one. Period shading in the figures is an axis annotation, not a claim that something
 broke in 1998, 2009 or 2017.
-
-### Backbone — notebook 05, first stage
-
-Edges are kept by the disparity filter (Serrano, Boguñá and Vespignani 2009) under a
-density rule rather than a fixed α: each year keeps |E| = 3N edges, unioned with the
-maximum spanning tree so the backbone stays connected. The filter is doing real work —
-against an equal-sized top-weight cut the Jaccard overlap is 0.58–0.71, so 30 to 40% of
-the edges differ.
-
-Three residual issues to carry into any reading of the backbone results:
-
-1. **The news retained-weight share is unstable**, swinging 48.4–67.8% (sd 0.037) and
-   correlating −0.52 with that year's edge density. Papers are steady at 52.0–56.4%
-   (sd 0.010), so this is a news-side confound.
-2. **News 1991 is an outlier** — 1,538 nodes and 14,386 edges against 2,260 and 40,084 in
-   1990 and 2,306 and 38,797 in 1992, and ten components even after the spanning tree. This
-   looks like a collection artefact and the year should be handled separately.
-3. **Node counts differ from the core–periphery tables**, because the backbone runs on the
-   29,312-concept filtered vocabulary to stay index-aligned with the embedding. News 1990
-   is 2,260 nodes here and 2,440 there.
-
-A published reference implementation was used to check the α computation. It agrees on the
-integral but does not apply the OR rule on undirected edges — it overwrites α as it walks
-each endpoint, so the result depends on node order. Only 83.0% of edges matched
-min(α_ij, α_ji) on this data.
-
-### Persistent paths and path perplexity — notebook 05, second stage
-
-An edge counts as present in a year if it is in that year's backbone proper; the MST
-additions are connectivity repair, not significant edges, so they are excluded. For each
-edge the longest unbroken run is recorded as `[run_start, run_end]`, and the threshold is
-L = 20 years.
-
-```
-threshold L        news     paper     ratio
-20 years          2,155    22,997     10.7x
-25 years          1,495    16,799     11.2x
-30 years            393    12,422     31.6x
-34 years (all)      163     9,674     59.3x
-```
-
-The two persistent networks are shaped differently, not only sized differently. The news
-one is a star: 863 nodes, and `automation` alone is adjacent to 774 of them, with a median
-degree of 1. The paper one has 4,379 nodes at median degree 3.
-
-A chain `v₁ – … – v_K` is a **persistent path** when the *intersection* of its K−1 edge
-windows spans at least L years. Each edge lasting a long time separately is not enough —
-the whole chain has to be alive over one common window.
-
-#### Anchor selection
-
-Comparing trajectories across corpora is confounded if each corpus walks its own chains: a
-difference could be the arena or it could be the chain. Building paths on the union of the
-two persistent networks is worse, because it walks edges one corpus does not have. Instead
-one edge is shared and the rest of each path comes from that corpus's own graph.
-
-An **anchor** is an edge that persists ≥ 20 years in *both* backbones. It is placed at the
-centre of the path — `· · A B · ·` for K = 6, `· · · A B · · ·` for K = 8 — and each side is
-extended by `K//2 − 1` steps through that corpus's own persistent graph, re-intersecting the
-persistence window at every step.
-
-The two networks share 111 concepts but only twelve edges that persist twenty years or more
-on both sides, and **eleven of the twelve have `software` as an endpoint**. Those eleven are
-usable; `medical imaging – tomography` yields no news path, because `tomography` has degree 1
-in the news persistent graph and its single neighbour is the anchor itself.
-
-Exhaustively counting the centred K = 6 persistent paths gives 776,000 to 1,453,000 per
-anchor for news and more than 2,000,000 for paper (counting was stopped there), so 500 paths
-per anchor and corpus are sampled rather than scored exhaustively. The sampler draws
-uniformly among the neighbours that satisfy the window condition, which is not a uniform
-sample over paths — it passes through high-degree nodes often.
-
-#### Perplexity
-
-The year-t embedding is asked, one step at a time, for the probability of the next concept:
-context `c_k = Σ_{i≤k} w_i·z_{v_i,t}` with `w_i ∝ λ^(k−i)` and λ = 0.5, score
-`s(u) = c_k·z_{u,t}`, and `p = softmax_u s(u)` over that year's active concepts with visited
-nodes excluded. The conditioning set is only the preceding concepts, so the chain rule holds
-and this is a true perplexity rather than a pseudo-perplexity. The network is undirected, so
-forward and reverse passes are computed and combined by geometric mean. The embedding is the
-existing LexicalDySAT `[34 × 29,312 × 32]`, used without retraining.
-
-Three metrics are reported together, because the candidate set differs by corpus and grows
-at different rates (news 1,538 → 7,560 active concepts, paper 12,577 → 18,200): perplexity
-rises mechanically as the candidate set grows, normalised rank falls mechanically, and raw
-rank is unaffected by either.
-
-Confidence intervals are clustered in two stages — paths are averaged within an anchor
-first, then the eleven anchor means are the sample (t, df = 10). Paths sharing an anchor are
-not independent, and treating all 5,500 as the sample would shrink the interval spuriously.
-
-#### Results
-
-```
-2009–2023 log slope, %/yr        news              paper
-K=6  perplexity                  +0.20 ± 0.27      −0.33 ± 0.40
-K=6  rank                        −0.66 ± 0.48      −0.22 ± 0.33
-K=6  normalised rank             −2.88 ± 0.48      −0.49 ± 0.33
-K=8  normalised rank             −3.13 ± 0.42      −0.51 ± 0.24
-```
-
-- **Holding the relation fixed, news chains are still consolidating and paper chains have
-  stopped.** On normalised rank the paired difference is −2.38 %/yr (95% CI −2.82 to −1.95,
-  t(10) = −12.2), and the sign is the same for all eleven anchors; at K = 8, −2.62
-  (−3.05 to −2.18). On raw rank, which needs no normalisation, the difference is −0.44
-  (p = 0.048) at K = 6 and −0.67 (p = 0.007) at K = 8 — so the direction does not depend on
-  the normalisation choice, though the magnitude does. On the anchor mean the two cross
-  around 2016: news falls from 20.11% of active concepts in 1990 to 1.78% in 2023, paper from
-  9.17% to 2.09%, and paper's 2010 value is already 2.19%.
-- **The metric disagreement survives the anchoring.** Perplexity moves the opposite way from
-  the rank metrics (paired difference +0.53, p = 0.005). Fixing the chains rules out "the two
-  arenas walk different chains" as the cause and leaves the growing candidate set: news gains
-  25.9% active concepts over 2009–2023 against paper's 4.1%.
-- **Same relation, different surrounding vocabulary.** With the middle two positions
-  identical by construction, news fills the remaining four slots with business and IT
-  discourse (`alliances`, `chief executive officers`, `acquisitions & mergers`,
-  `customer services`) and paper with abstract method terms (`image (mathematics)`,
-  `function (biology)`, `point (geometry)`, `cluster analysis`). The paper side is dominated
-  by polysemous subject headings, which any qualitative reading has to flag.
-
-The anchors are all `software` neighbours, which is forced by there being only twelve shared
-persistent edges. The result describes the two arenas' entire shared persistent structure; it
-does not generalise to other subject areas.
-
-An earlier version of this stage sampled 2,000 random-walk sequences per corpus from the
-whole persistent network and compared the two trajectories directly. It was dropped: the two
-corpora walked different chains, so the arena and the chain could not be separated, and the
-random walk over-sampled hubs. The anchor design replaces it.
 
 ## Environment
 
