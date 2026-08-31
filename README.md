@@ -297,6 +297,53 @@ min(α_ij, α_ji) on this data.
   persist for twenty years or more in both corpora, and eleven of them have `software` as
   an endpoint.
 
+### Anchor comparison — notebook 05, §9
+
+Comparing trajectories across corpora is confounded if each corpus walks its own chains: a
+difference could be the arena or it could be the chain. §9 fixes one edge and lets each
+corpus supply the rest. An **anchor** is an edge that persists ≥ 20 years in *both*
+backbones. It is placed at the centre of the path — `· · A B · ·` for K = 6, `· · · A B · · ·`
+for K = 8 — and each side is extended by `K//2 − 1` steps through that corpus's own
+persistent graph, re-intersecting the persistence window at every step. Nothing is scored
+on an edge the corpus does not have.
+
+Eleven of the twelve anchors yield 500 distinct paths per corpus at both lengths.
+`medical imaging – tomography` yields none for news: `tomography` has degree 1 in the news
+persistent graph and its single neighbour is the anchor itself, so no centred path exists.
+It is dropped from both sides.
+
+Confidence intervals are clustered in two stages — paths are averaged within an anchor
+first, then the eleven anchor means are the sample (t, df = 10). Paths sharing an anchor
+are not independent, and treating them as the sample would shrink the interval spuriously.
+
+```
+2009–2023 log slope, %/yr        news              paper
+K=6  perplexity                  +0.20 ± 0.27      −0.33 ± 0.40
+K=6  rank                        −0.66 ± 0.48      −0.22 ± 0.33
+K=6  normalised rank             −2.88 ± 0.48      −0.49 ± 0.33
+K=8  normalised rank             −3.13 ± 0.42      −0.51 ± 0.24
+```
+
+- **Holding the relation fixed, news chains are still consolidating and paper chains have
+  stopped.** On normalised rank the paired difference is −2.38 %/yr (95% CI −2.82 to −1.95,
+  t(10) = −12.2), and the sign is the same for all eleven anchors; at K = 8, −2.62
+  (−3.05 to −2.18). On raw rank, which needs no normalisation, the difference is −0.44
+  (p = 0.048) at K = 6 and −0.67 (p = 0.007) at K = 8 — so the direction does not depend on
+  the normalisation choice, though the magnitude does.
+- **The metric disagreement survives the anchoring.** Perplexity moves the opposite way
+  from the rank metrics (paired difference +0.53, p = 0.005). Fixing the chains rules out
+  "the two arenas walk different chains" as the cause and leaves the growing candidate set.
+- **Same relation, different surrounding vocabulary.** With the middle two positions
+  identical by construction, news fills the remaining four slots with business and IT
+  discourse (`alliances`, `chief executive officers`, `acquisitions & mergers`,
+  `customer services`) and paper with abstract method terms (`image (mathematics)`,
+  `function (biology)`, `point (geometry)`, `cluster analysis`). The paper side is dominated
+  by polysemous subject headings, which any qualitative reading has to flag.
+
+The anchors are all `software` neighbours, which is forced by there being only twelve
+shared persistent edges. The result describes the two arenas' entire shared persistent
+structure; it does not generalise to other subject areas.
+
 ## Environment
 
 `numpy`, `pandas`, `scipy` and `matplotlib` throughout. Beyond those:
