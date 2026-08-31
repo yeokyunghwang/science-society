@@ -284,37 +284,72 @@ integral but does not apply the OR rule on undirected edges — it overwrites α
 each endpoint, so the result depends on node order. Only 83.0% of edges matched
 min(α_ij, α_ji) on this data.
 
-### Sequence perplexity — notebook 05
+### Persistent paths and path perplexity — notebook 05, second stage
 
-- **Concept chains in the scientific literature stop moving around 2009.** Over
-  2009–2023 the slopes are −0.64 %/yr for perplexity, −0.31 %/yr for rank and
-  −0.58 %/yr for normalised rank: all three agree, and all three are near zero.
-- **No stabilisation point can be identified for news.** Over the same window the three
-  slopes are −0.10, −1.29 and −3.51 %/yr — a 35-fold disagreement. The news vocabulary
-  grows by 25.9% over that period while the paper vocabulary grows by 4.1%, and the two
-  normalisations respond to that growth in opposite directions.
-- **The two arenas share almost no persistent relational structure.** Only twelve edges
-  persist for twenty years or more in both corpora, and eleven of them have `software` as
-  an endpoint.
+An edge counts as present in a year if it is in that year's backbone proper; the MST
+additions are connectivity repair, not significant edges, so they are excluded. For each
+edge the longest unbroken run is recorded as `[run_start, run_end]`, and the threshold is
+L = 20 years.
 
-### Anchor comparison — notebook 05, §9
+```
+threshold L        news     paper     ratio
+20 years          2,155    22,997     10.7x
+25 years          1,495    16,799     11.2x
+30 years            393    12,422     31.6x
+34 years (all)      163     9,674     59.3x
+```
+
+The two persistent networks are shaped differently, not only sized differently. The news
+one is a star: 863 nodes, and `automation` alone is adjacent to 774 of them, with a median
+degree of 1. The paper one has 4,379 nodes at median degree 3.
+
+A chain `v₁ – … – v_K` is a **persistent path** when the *intersection* of its K−1 edge
+windows spans at least L years. Each edge lasting a long time separately is not enough —
+the whole chain has to be alive over one common window.
+
+#### Anchor selection
 
 Comparing trajectories across corpora is confounded if each corpus walks its own chains: a
-difference could be the arena or it could be the chain. §9 fixes one edge and lets each
-corpus supply the rest. An **anchor** is an edge that persists ≥ 20 years in *both*
-backbones. It is placed at the centre of the path — `· · A B · ·` for K = 6, `· · · A B · · ·`
-for K = 8 — and each side is extended by `K//2 − 1` steps through that corpus's own
-persistent graph, re-intersecting the persistence window at every step. Nothing is scored
-on an edge the corpus does not have.
+difference could be the arena or it could be the chain. Building paths on the union of the
+two persistent networks is worse, because it walks edges one corpus does not have. Instead
+one edge is shared and the rest of each path comes from that corpus's own graph.
 
-Eleven of the twelve anchors yield 500 distinct paths per corpus at both lengths.
-`medical imaging – tomography` yields none for news: `tomography` has degree 1 in the news
-persistent graph and its single neighbour is the anchor itself, so no centred path exists.
-It is dropped from both sides.
+An **anchor** is an edge that persists ≥ 20 years in *both* backbones. It is placed at the
+centre of the path — `· · A B · ·` for K = 6, `· · · A B · · ·` for K = 8 — and each side is
+extended by `K//2 − 1` steps through that corpus's own persistent graph, re-intersecting the
+persistence window at every step.
+
+The two networks share 111 concepts but only twelve edges that persist twenty years or more
+on both sides, and **eleven of the twelve have `software` as an endpoint**. Those eleven are
+usable; `medical imaging – tomography` yields no news path, because `tomography` has degree 1
+in the news persistent graph and its single neighbour is the anchor itself.
+
+Exhaustively counting the centred K = 6 persistent paths gives 776,000 to 1,453,000 per
+anchor for news and more than 2,000,000 for paper (counting was stopped there), so 500 paths
+per anchor and corpus are sampled rather than scored exhaustively. The sampler draws
+uniformly among the neighbours that satisfy the window condition, which is not a uniform
+sample over paths — it passes through high-degree nodes often.
+
+#### Perplexity
+
+The year-t embedding is asked, one step at a time, for the probability of the next concept:
+context `c_k = Σ_{i≤k} w_i·z_{v_i,t}` with `w_i ∝ λ^(k−i)` and λ = 0.5, score
+`s(u) = c_k·z_{u,t}`, and `p = softmax_u s(u)` over that year's active concepts with visited
+nodes excluded. The conditioning set is only the preceding concepts, so the chain rule holds
+and this is a true perplexity rather than a pseudo-perplexity. The network is undirected, so
+forward and reverse passes are computed and combined by geometric mean. The embedding is the
+existing LexicalDySAT `[34 × 29,312 × 32]`, used without retraining.
+
+Three metrics are reported together, because the candidate set differs by corpus and grows
+at different rates (news 1,538 → 7,560 active concepts, paper 12,577 → 18,200): perplexity
+rises mechanically as the candidate set grows, normalised rank falls mechanically, and raw
+rank is unaffected by either.
 
 Confidence intervals are clustered in two stages — paths are averaged within an anchor
-first, then the eleven anchor means are the sample (t, df = 10). Paths sharing an anchor
-are not independent, and treating them as the sample would shrink the interval spuriously.
+first, then the eleven anchor means are the sample (t, df = 10). Paths sharing an anchor are
+not independent, and treating all 5,500 as the sample would shrink the interval spuriously.
+
+#### Results
 
 ```
 2009–2023 log slope, %/yr        news              paper
@@ -329,10 +364,13 @@ K=8  normalised rank             −3.13 ± 0.42      −0.51 ± 0.24
   t(10) = −12.2), and the sign is the same for all eleven anchors; at K = 8, −2.62
   (−3.05 to −2.18). On raw rank, which needs no normalisation, the difference is −0.44
   (p = 0.048) at K = 6 and −0.67 (p = 0.007) at K = 8 — so the direction does not depend on
-  the normalisation choice, though the magnitude does.
-- **The metric disagreement survives the anchoring.** Perplexity moves the opposite way
-  from the rank metrics (paired difference +0.53, p = 0.005). Fixing the chains rules out
-  "the two arenas walk different chains" as the cause and leaves the growing candidate set.
+  the normalisation choice, though the magnitude does. On the anchor mean the two cross
+  around 2016: news falls from 20.11% of active concepts in 1990 to 1.78% in 2023, paper from
+  9.17% to 2.09%, and paper's 2010 value is already 2.19%.
+- **The metric disagreement survives the anchoring.** Perplexity moves the opposite way from
+  the rank metrics (paired difference +0.53, p = 0.005). Fixing the chains rules out "the two
+  arenas walk different chains" as the cause and leaves the growing candidate set: news gains
+  25.9% active concepts over 2009–2023 against paper's 4.1%.
 - **Same relation, different surrounding vocabulary.** With the middle two positions
   identical by construction, news fills the remaining four slots with business and IT
   discourse (`alliances`, `chief executive officers`, `acquisitions & mergers`,
@@ -340,9 +378,14 @@ K=8  normalised rank             −3.13 ± 0.42      −0.51 ± 0.24
   `function (biology)`, `point (geometry)`, `cluster analysis`). The paper side is dominated
   by polysemous subject headings, which any qualitative reading has to flag.
 
-The anchors are all `software` neighbours, which is forced by there being only twelve
-shared persistent edges. The result describes the two arenas' entire shared persistent
-structure; it does not generalise to other subject areas.
+The anchors are all `software` neighbours, which is forced by there being only twelve shared
+persistent edges. The result describes the two arenas' entire shared persistent structure; it
+does not generalise to other subject areas.
+
+An earlier version of this stage sampled 2,000 random-walk sequences per corpus from the
+whole persistent network and compared the two trajectories directly. It was dropped: the two
+corpora walked different chains, so the arena and the chain could not be separated, and the
+random walk over-sampled hubs. The anchor design replaces it.
 
 ## Environment
 
