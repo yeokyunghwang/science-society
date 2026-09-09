@@ -65,3 +65,13 @@ __pycache__/
 
 # 발표 자료는 저장소에 두지 않는다 (로컬 파일로만 유지)
 /sequence_perplexity.pptx
+
+# ── 2026-09 폴더 재구성 이후 ──────────────────────────────
+# 이전 버전 보관용 (311 MB, anchor_all.csv 71 MB 포함)
+/old/
+
+# core-periphery 그리드 탐색 산출물 1,700개 (26 MB) — 노트북 02가 재생성
+/results/cp_results/grid/
+
+# 발표 자료는 위치와 무관하게 제외
+*.pptx
