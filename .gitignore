@@ -75,3 +75,4 @@ __pycache__/
 
 # 발표 자료는 위치와 무관하게 제외
 *.pptx
+dysat-pytorch/
