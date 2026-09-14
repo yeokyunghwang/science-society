@@ -1,78 +1,45 @@
 # ─────────────────────────────────────────────────────────────────────
-#  Data and model artefacts are not tracked.
+#  무엇을 추적하는가
 #
-#  Only the raw subject-term files are irreducible input; notebooks 01 and
-#  02 rebuild everything under data/processed/ and models/ from them, and
-#  notebook 05 rebuilds the backbone and the anchor results.
+#  코드(notebooks/, src/)와 최종 지표·그림(results/cp_results/, results/figures/)만
+#  추적한다. data/ 아래는 전부 재생성물이다 — data/raw/ 에 원자료를 넣고 노트북 01,
+#  src/dysat/train.py, 노트북 03 을 순서대로 돌리면 그대로 복원된다.
 #
-#  A three-year sample of the news corpus IS tracked, and it sits at the
-#  exact paths the notebooks read from. Dropping the full files into the
-#  same folders is all it takes to go from sample to full run.
+#  원자료의 위치는 저장소 밖일 수 있다. .env 의 SCISOC_RAW 로 지정한다(.env.example 참조).
 # ─────────────────────────────────────────────────────────────────────
+
+# ── 데이터 (전부 재생성물) ────────────────────────────────
 /data/*
 !/data/raw/
-!/data/processed/
 /data/raw/*
 !/data/raw/.gitkeep
-/data/processed/*
-!/data/processed/embeddings/
-!/data/processed/lexical/
-!/data/processed/networks_emb/
 
-/data/processed/embeddings/*
-!/data/processed/embeddings/*_sample.npy
+# ── 결과 ──────────────────────────────────────────────
+# core-periphery 그리드 탐색 산출물 1,700개 (26 MB) — 노트북 02가 재생성
+/results/cp_results/grid/
+# DySAT 학습 로그·체크포인트 — src/dysat/train.py 가 재생성
+/results/dysat/
 
-/data/processed/lexical/*
-!/data/processed/lexical/news_1995_lex_adj_f.npz
-!/data/processed/lexical/news_2010_lex_adj_f.npz
-!/data/processed/lexical/news_2023_lex_adj_f.npz
-!/data/processed/lexical/base_idx.pkl
-!/data/processed/lexical/base_vocab.pkl
-!/data/processed/lexical/lexical_graph_summary_filtered.csv
-!/data/processed/lexical/subject_lexical_summary.csv
+# ── DySAT 자체 테스트 산출물 ────────────────────────────
+/src/dysat/synth/
+/src/dysat/logs/
+/src/dysat/data/
 
-/data/processed/networks_emb/*
-!/data/processed/networks_emb/news_1995_adj_f.npz
-!/data/processed/networks_emb/news_2010_adj_f.npz
-!/data/processed/networks_emb/news_2023_adj_f.npz
-!/data/processed/networks_emb/*.pkl
-!/data/processed/networks_emb/*_member.npy
-!/data/processed/networks_emb/keep_idx.npy
-!/data/processed/networks_emb/old_to_new.npy
-!/data/processed/networks_emb/*_summary.csv
+# ── 로컬 전용 ─────────────────────────────────────────
+# 이전 버전 보관용 (311 MB, anchor_all.csv 71 MB 포함)
+/old/
+# 경로 설정은 사람마다 다르다. 예시만 추적한다.
+.env
+# 발표 자료·압축 파일은 저장소에 두지 않는다 (보고서는 마크다운으로 둔다)
+*.pptx
+*.zip
 
-# Checkpoints are 8.9 MB each and rebuilt by notebook 02; the training
-# curves next to them are a few hundred bytes and worth keeping.
-/models/*
-!/models/*_train_history.csv
-
-# Superseded material, kept locally
-/_superseded/
-
-# Editor / OS
+# ── 에디터 / OS / 파이썬 ───────────────────────────────
 .ipynb_checkpoints/
 __pycache__/
 *.pyc
+*.egg-info/
+build/
+dist/
 .DS_Store
-
-# 앵커 분석의 경로 수준 원자료 (75 MB). 노트북 §9.2가 재생성하며,
-# 요약본(anchor_per_anchor / anchor_summary / anchor_slopes / anchor_examples)과
-# 표본 경로 자체(anchor_seqs_*.npz)는 추적한다.
-/results/sequences/anchor_all.csv
-
-# Notion 내보내기 등 압축 파일은 추적하지 않는다 (보고서는 reports/ 에 마크다운으로 둔다)
-*.zip
-
-# 발표 자료는 저장소에 두지 않는다 (로컬 파일로만 유지)
-/sequence_perplexity.pptx
-
-# ── 2026-09 폴더 재구성 이후 ──────────────────────────────
-# 이전 버전 보관용 (311 MB, anchor_all.csv 71 MB 포함)
-/old/
-
-# core-periphery 그리드 탐색 산출물 1,700개 (26 MB) — 노트북 02가 재생성
-/results/cp_results/grid/
-
-# 발표 자료는 위치와 무관하게 제외
-*.pptx
-dysat-pytorch/
+.venv/

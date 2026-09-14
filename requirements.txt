@@ -1,0 +1,12 @@
+# Notebooks 01–03. TensorFlow is NOT here: it is only needed by src/dysat/,
+# which pins numpy<2 and is installed separately (see src/dysat/README.md).
+numpy>=1.24
+pandas>=2.0
+scipy>=1.10
+networkx>=3.0
+matplotlib>=3.7
+seaborn>=0.12
+tqdm>=4.65
+pyarrow>=12.0          # backbone tables are parquet
+cpnet>=0.0.20          # Kojaku–Masuda core–periphery (notebook 02)
+jupyterlab>=4.0

@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "scisoc"
+version = "0.1.0"
+description = "Science-Society: concept co-occurrence networks, core-periphery structure and dynamic graph embedding, 1990-2023"
+requires-python = ">=3.10"
+dependencies = [
+    "numpy>=1.24",
+    "pandas>=2.0",
+    "scipy>=1.10",
+]
+
+[project.optional-dependencies]
+# Everything the notebooks need on top of the core three.
+notebooks = [
+    "networkx>=3.0",
+    "matplotlib>=3.7",
+    "seaborn>=0.12",
+    "tqdm>=4.65",
+    "pyarrow>=12.0",
+    "cpnet>=0.0.20",
+    "jupyterlab>=4.0",
+]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+# src/dysat is a script package launched from its own directory (upstream DySAT
+# convention), not an importable library, so it is deliberately not listed here.
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["scisoc*"]
