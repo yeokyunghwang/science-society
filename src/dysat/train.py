@@ -7,13 +7,18 @@ from datetime import datetime
 from collections import defaultdict
 import logging
 
+import sys
+from pathlib import Path
+
 import numpy as np
 import scipy.sparse as sp
 
-from _repo import paths
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))     # <repo>/src -> scisoc
+from scisoc.config import paths
+
 from flags import *
 from tf_compat import tf
-from models.DySAT.models import DySAT
+from models.models import DySAT
 from utils.minibatch import NodeMinibatchIterator
 from utils.preprocess import load_graphs, preprocess_features, adj_with_selfloop_raw, split_edges
 

@@ -1,5 +1,5 @@
 from tf_compat import tf
-from models.DySAT.inits import *
+from models.inits import *
 
 flags = tf.app.flags
 FLAGS = flags.FLAGS

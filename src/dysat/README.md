@@ -20,7 +20,7 @@
 
 ## 실행
 
-`src/dysat/` 에서 실행한다 (`from flags import *`, `from models.DySAT...` 가 상대 import 이므로).
+`src/dysat/` 에서 실행한다 (`from flags import *`, `from models...` 가 상대 import 이므로).
 
 ```bash
 pip install "tensorflow-cpu>=2.16" "numpy<2" scipy networkx     # 또는 TF 1.15 + numpy<1.20
@@ -54,14 +54,13 @@ python train.py --dataset synth --time_steps 5 --epochs 60 --batch_size 20 --pat
 | `train.py` | **제거:** JSON 플래그 덮어쓰기, `get_context_pairs`, `get_evaluation_data`, 마지막 스냅샷 엣지 덮어쓰기(126–135행), `evaluate_classifier`·csv, `[:, T−2, :]` 슬라이싱. **추가:** 스냅샷별 `split_edges` → 학습 인접행렬 + held-out 쌍, `active` placeholder, 고정 검증 부분집합, 검증 손실 조기종료, best checkpoint, 전체 인접행렬로 최종 `E [N,T,F]` 계산·저장(+ β, temporal attn 평균, 위치 임베딩, 손실 이력) |
 | `utils/preprocess.py` | `preprocess_features`: `.todense()` 제거. `sparse_to_tuple`: canonical 정렬. **신설** `adj_with_selfloop_raw` (원가중치 + self-loop=행평균, GCN 정규화 없음), `split_edges`. **삭제** `normalize_graph_gcn`, `get_context_pairs*`, `get_evaluation_data`, `create_data_splits`, random_walk import |
 | `utils/minibatch.py` | 컨텍스트 쌍 → `sample_pairs`: 학습 인접행렬 행에서 이웃을 가중치 비례로 `max_positive`개 추출. `active` 마스크 생성. `pairs_feed_dict` (검증용). `max_positive`가 `neg_sample_size`에서 분리 |
-| `models/DySAT/layers.py` | **수정①** 구조 attention: `e_uv = LeakyReLU(f1_u+f2_v) + β·log A_uv` (원본은 `LeakyReLU(A_uv·(f1_u+f2_v))`). `β` 스칼라 변수(층당 1개, `binary_adj`면 0 고정). 인덱스 정렬을 `tf.gather`로 보장. `tf.contrib.*` → `tf.glorot_uniform_initializer`, `tf.linalg.band_part`. `tf.layers.conv1d(kernel=1)` → `_dense1`(동일 연산). `tf.layers.dropout(training=False)`(원본에서 무효였음) → `tf.nn.dropout(rate=)`. `if coef_drop != 0.0` 텐서-불리언 제거 |
-| `models/DySAT/models.py` | **수정②** `_loss`: BCE+음성표본 → 활성 노드 전체 softmax cross-entropy, 자기·비활성 마스크, 스냅샷 평균. `num_time_steps_train = T` (원본 T−1). `fixed_unigram_candidate_sampler` 제거. 생성자 인자 `degrees` → `num_nodes`. `map()`→`list(map())`. `graph_loss_per_t` 노출 |
-| `models/DySAT/inits.py` | import만 (`tf_compat`) |
+| `models/layers.py` | **수정①** 구조 attention: `e_uv = LeakyReLU(f1_u+f2_v) + β·log A_uv` (원본은 `LeakyReLU(A_uv·(f1_u+f2_v))`). `β` 스칼라 변수(층당 1개, `binary_adj`면 0 고정). 인덱스 정렬을 `tf.gather`로 보장. `tf.contrib.*` → `tf.glorot_uniform_initializer`, `tf.linalg.band_part`. `tf.layers.conv1d(kernel=1)` → `_dense1`(동일 연산). `tf.layers.dropout(training=False)`(원본에서 무효였음) → `tf.nn.dropout(rate=)`. `if coef_drop != 0.0` 텐서-불리언 제거 |
+| `models/models.py` | **수정②** `_loss`: BCE+음성표본 → 활성 노드 전체 softmax cross-entropy, 자기·비활성 마스크, 스냅샷 평균. `num_time_steps_train = T` (원본 T−1). `fixed_unigram_candidate_sampler` 제거. 생성자 인자 `degrees` → `num_nodes`. `map()`→`list(map())`. `graph_loss_per_t` 노출 |
+| `models/inits.py` | import만 (`tf_compat`) |
 
 ### 신설
 
-`tf_compat.py`(TF1/2 shim), `_repo.py`(저장소 `src/` 를 `sys.path` 에 올려 `scisoc.config.paths` 사용),
-`prepare_data.py`(adj_<year>.npz → graphs.npz), `export_probs.py`, `make_synth.py`.
+`tf_compat.py`(TF1/2 shim), `prepare_data.py`(adj_<year>.npz → graphs.npz), `export_probs.py`, `make_synth.py`.
 
 ### 2026-09 저장소 통합 시 수정
 
@@ -73,6 +72,8 @@ python train.py --dataset synth --time_steps 5 --epochs 60 --batch_size 20 --pat
 | `export_probs.py` | 해당 연도에 활성 노드가 없을 때 `max()` 가 빈 배열에서 죽던 문제, `pairs` 가 비었을 때 `mean()` 이 NaN 경고를 내던 문제 처리. `load_export(source)` 추가 |
 | `flags.py` | `save_dir` 제거(출력 위치는 `paths.embeddings` 하나로 고정) |
 | `make_synth.py` | 합성 데이터도 실제 데이터와 같은 `adj_<year>.npz` 이름을 쓰게 함 |
+| `models/` | `models/DySAT/` 한 층을 없애고 `models/{inits,layers,models}.py` 로 폄 |
+| 경로 | 진입점마다 `sys.path.insert(..., <repo>/src)` 두 줄로 `scisoc.config.paths` 를 불러온다 |
 
 ### 삭제
 

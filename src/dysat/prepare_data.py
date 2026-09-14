@@ -16,13 +16,15 @@ up across years and with the vocabulary in `node_info.pkl`.
 from __future__ import annotations
 
 import argparse
+import sys
 from pathlib import Path
 
 import networkx as nx
 import numpy as np
 import scipy.sparse as sp
 
-from _repo import paths
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))     # <repo>/src -> scisoc
+from scisoc.config import paths
 
 
 def build(src: Path, out: Path, years: range) -> Path:

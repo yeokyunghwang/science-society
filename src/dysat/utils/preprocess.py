@@ -1,11 +1,14 @@
 from __future__ import print_function
+import sys
 from pathlib import Path
 
 import numpy as np
 import networkx as nx
 import scipy.sparse as sp
 
-from _repo import paths
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))     # <repo>/src -> scisoc
+from scisoc.config import paths
+
 from tf_compat import tf
 
 flags = tf.app.flags

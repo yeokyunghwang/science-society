@@ -11,11 +11,13 @@ excluding v itself -- exactly the quantity the training loss normalises.
 
 from __future__ import annotations
 
+import sys
 from pathlib import Path
 
 import numpy as np
 
-from _repo import paths
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))     # <repo>/src -> scisoc
+from scisoc.config import paths
 
 __all__ = ["load_export", "cond_prob", "log_prob_pairs", "perplexity"]
 
