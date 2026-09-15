@@ -3,8 +3,8 @@ and write it as `synth/adj_<year>.npz`, the layout notebook 01 uses for the real
 arenas, so train.py reads both with one code path. Checks the install and both
 attention variants without the real data.
 
-    python selftest.py                       # 60 nodes, 5 snapshots: the reference case
-    python selftest.py --nodes 3000 --degree 50   # closer to the real graphs' density
+    python selftest.py                                       # 60 nodes, 5 snapshots: the reference case
+    python selftest.py --nodes 1000 --degree 50 --first_year 2019   # news-like density, years 2019-2023
 
 then, for the reference case,
 
@@ -13,11 +13,13 @@ then, for the reference case,
         --structural_head_config 4 --structural_layer_config 32 \
         --temporal_head_config 4 --temporal_layer_config 32
 
-Reference numbers (60 nodes, defaults): loss starts ~4.05 (= log 57, uniform);
-gat   early stop at epoch 44, best epoch 34, val 3.6122
-gatv2 early stop at epoch 44, best epoch 34, val 3.6032 (--share_weights=false)
-Other sizes give other numbers; the check there is that both variants train and
-val loss falls well below log(n_active).
+Reference numbers (60 nodes, defaults, reference config above):
+    gat                          early stop 31, best epoch 21, val 3.3690
+    gatv2 (--share_weights=false) early stop 32, best epoch 22, val 3.3654
+    gatv2 --share_weights=true    early stop 40, best epoch 30, val 3.3594
+At 3000 nodes / degree 50 with the default model, one epoch takes ~12 s (gat) and
+~17 s (gatv2) on a laptop CPU. Other sizes give other numbers; the check there is
+that both variants train and val loss falls well below log(n_active).
 """
 
 import argparse
@@ -69,9 +71,11 @@ def main():
     ap.add_argument("--degree", type=float, default=None,
                     help="target mean degree; default keeps the reference densities")
     ap.add_argument("--seed", type=int, default=0)
+    ap.add_argument("--first_year", type=int, default=1990,
+                    help="label of the first snapshot; e.g. 2019 to mimic --years 2019-2023")
     a = ap.parse_args()
 
-    y0, y1 = build(a.nodes, a.snapshots, a.communities, a.degree, a.seed)
+    y0, y1 = build(a.nodes, a.snapshots, a.communities, a.degree, a.seed, first_year=a.first_year)
     print("\nwrote synth/adj_{}.npz .. adj_{}.npz".format(y0, y1))
 
     years = "{}-{}".format(y0, y1)
