@@ -31,6 +31,17 @@ python train.py --dataset news --years 1990-2023          # 기본값: batch 512
 
 `--src` 를 주면 다른 디렉터리의 `adj_<year>.npz` 를 읽는다. 스냅샷 개수는 `--years` 에서 나온다.
 
+진행 상황은 배치마다 stdout 으로 나온다(`--log_every`, 기본 5; `0` 이면 끔). stdout 은 줄 단위로
+흘려보내므로 로그 수집기 뒤에서도 `python -u` 없이 바로 보인다. 배치별 손실은 그와 별개로
+`results/dysat/<run>/log/` 에도 쌓인다.
+
+```
+Building the TF graph (T = 5 snapshots x 8 heads)
+  graph built in 3.5s; initializing variables
+  epoch   0  batch   5/31  loss 8.1234  6.2s/batch  ~3.2 min/epoch
+Epoch   0  train 7.95  val 8.11  (PP_val ~ 3336.7)  beta 1.011  time 190.1s
+```
+
 ## Attention 변형: GAT / GATv2
 
 `--attn_variant` 로 고른다. 구조 attention의 **점수 함수 한 곳**만 바뀌고 나머지는 전부 같다.

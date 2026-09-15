@@ -22,6 +22,13 @@ from models.models import DySAT
 from utils.minibatch import NodeMinibatchIterator
 from utils.preprocess import load_graphs, preprocess_features, adj_with_selfloop_raw, split_edges
 
+# Log lines must reach the console as they happen: under a log collector stdout is a
+# pipe, so Python block-buffers it and nothing appears until ~8 KB has accumulated.
+try:
+    sys.stdout.reconfigure(line_buffering=True)          # py3.7+
+except AttributeError:
+    pass
+
 np.random.seed(FLAGS.seed)
 tf.set_random_seed(FLAGS.seed)
 
@@ -105,7 +112,9 @@ def construct_placeholders(num_time_steps):
     return placeholders
 
 
-print("Initializing session")
+print("Building the TF graph (T = {} snapshots x {} heads)".format(
+    num_time_steps, FLAGS.structural_head_config))
+_t_build = time.time()
 config = tf.ConfigProto()
 config.gpu_options.allow_growth = True
 sess = tf.Session(config=config)
@@ -114,11 +123,15 @@ placeholders = construct_placeholders(num_time_steps)
 
 minibatchIterator = NodeMinibatchIterator(adjs_train_csr, adjs_feed_train, feats_train, placeholders,
                                           num_time_steps, batch_size=FLAGS.batch_size)
-print("# training batches per epoch", minibatchIterator.num_training_batches())
+n_batches = minibatchIterator.num_training_batches()
+print("# training batches per epoch", n_batches)
 
 model = DySAT(placeholders, num_features, num_features_nonzero, num_nodes=N)
+print("  graph built in {:.1f}s; initializing variables".format(time.time() - _t_build))
+_t_init = time.time()
 sess.run(tf.global_variables_initializer())
 saver = tf.train.Saver(max_to_keep=1)
+print("  initialized in {:.1f}s".format(time.time() - _t_init))
 ckpt_path = str(MODEL_DIR / "best.ckpt")
 
 # diagnostics ops
@@ -151,6 +164,8 @@ val_feed.update({placeholders['spatial_drop']: 0.0, placeholders['temporal_drop'
 best_val, best_epoch, bad_epochs = np.inf, -1, 0
 history = defaultdict(list)
 
+print("Training. The first batch also runs TF's graph optimization, so it takes "
+      "longer than the rest.")
 for epoch in range(FLAGS.epochs):
     minibatchIterator.shuffle()
     epoch_loss, it, epoch_time = 0.0, 0, 0.0
@@ -166,6 +181,11 @@ for epoch in range(FLAGS.epochs):
             it, train_cost, graph_cost, reg_cost))
         epoch_loss += train_cost
         it += 1
+        if FLAGS.log_every and it % FLAGS.log_every == 0:
+            per_batch = epoch_time / it
+            print("  epoch {:3d}  batch {:3d}/{}  loss {:.4f}  {:.1f}s/batch  "
+                  "~{:.1f} min/epoch".format(epoch, it, n_batches, train_cost,
+                                             per_batch, per_batch * n_batches / 60))
     epoch_loss /= max(it, 1)
     history['train_loss'].append(epoch_loss)
 

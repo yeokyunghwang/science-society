@@ -14,6 +14,8 @@ flags.DEFINE_integer('GPU_ID', 0, 'GPU_ID')
 flags.DEFINE_boolean('featureless', True, 'Use 1-hot instead of features')
 flags.DEFINE_float('max_gradient_norm', 1.0, 'Clip gradients to this norm')
 flags.DEFINE_integer('val_freq', 1, 'Validation frequency (epochs)')
+flags.DEFINE_integer('log_every', 5, 'Print a progress line every N minibatches. '
+                     '0 disables it; the per-batch log file is written either way.')
 flags.DEFINE_float('learning_rate', 0.001, 'Initial learning rate for self-attention model.')
 flags.DEFINE_float('spatial_drop', 0.1, 'attn Dropout (1 - keep probability).')
 flags.DEFINE_float('weight_decay', 0.0005, 'Weight for L2 loss on embedding matrix.')
