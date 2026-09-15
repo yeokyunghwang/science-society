@@ -109,7 +109,7 @@ class Paths:
 
     @property
     def embeddings(self) -> Path:
-        """DySAT output: `<source>_E.npz` with E [N, T, F] and active [N, T]."""
+        """DySAT output: `<source>[_<variant>]_E.npz` with E [N, T, F] and active [N, T]."""
         return self.data / "embeddings"
 
     # ---- results ------------------------------------------------------
@@ -137,8 +137,14 @@ class Paths:
     def node_info(self, source: str) -> Path:
         return self.networks / source / "node_info.pkl"
 
-    def embedding_npz(self, source: str) -> Path:
-        return self.embeddings / f"{source}_E.npz"
+    def embedding_npz(self, source: str, variant: str = "gat") -> Path:
+        """`<source>_E.npz` for GAT, `<source>_gatv2_E.npz` for GATv2.
+
+        The plain name is kept for GAT so runs made before the variant flag existed
+        still resolve.
+        """
+        stem = source if variant == "gat" else f"{source}_{variant}"
+        return self.embeddings / f"{stem}_E.npz"
 
     def ensure(self) -> "Paths":
         """Create every output directory. Inputs are never created."""

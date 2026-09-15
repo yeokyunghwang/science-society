@@ -32,6 +32,12 @@ flags.DEFINE_integer('window', -1, 'Window for temporal attention (default : -1 
 flags.DEFINE_integer('epochs', 200, 'Max number of epochs (early stopping on val loss).')             # was 1
 flags.DEFINE_integer('batch_size', 512, 'Batch size (# nodes)')                                       # unchanged value
 flags.DEFINE_string('structural_head_config', '8', '# attention heads in each GAT layer')            # was '16'
+# ---- attention variant ----
+flags.DEFINE_string('attn_variant', 'gat',
+                    "Structural attention scoring: 'gat' (Velickovic et al. 2018, static) or "
+                    "'gatv2' (Brody et al. 2022, dynamic). Names the output "
+                    "<embeddings>/<dataset>_E.npz vs <dataset>_gatv2_E.npz.")
+
 flags.DEFINE_float('temporal_drop', 0.0, 'Dropout on temporal attention weights. NOTE: original '
                    'used tf.layers.dropout(training=False) => never applied; 0.0 reproduces that.')  # was 0.5
 

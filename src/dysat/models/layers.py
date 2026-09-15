@@ -18,9 +18,11 @@ def get_layer_uid(layer_name=''):
 
 
 def _dense1(x, out_dim, name, use_bias=True, activation=None):
-    """Position-wise linear map on the last axis. Replaces tf.layers.conv1d(kernel_size=1),
+    """
+    Position-wise linear map on the last axis. Replaces tf.layers.conv1d(kernel_size=1),
     which no longer exists in TF>=2.16 compat.v1. Same init (glorot_uniform kernel, zero bias).
-    Variable reuse follows the enclosing tf.variable_scope."""
+    Variable reuse follows the enclosing tf.variable_scope.
+    """
     in_dim = x.get_shape().as_list()[-1]
     W = tf.get_variable(name + '/kernel', shape=[in_dim, out_dim], dtype=tf.float32,
                         initializer=tf.glorot_uniform_initializer())
@@ -156,11 +158,13 @@ class TemporalAttentionLayer(Layer):
 
 
 class StructuralAttentionLayer(Layer):
-    """ GAT layer applied per snapshot with shared parameters.
+    """ 
+        GAT layer applied per snapshot with shared parameters.
         CHANGE (modification 1): edge weight enters as an additive log-bias outside the
         nonlinearity,  e_uv = LeakyReLU(f1_u + f2_v) + beta * log(A_uv),  instead of the
         original  e_uv = LeakyReLU(A_uv * (f1_u + f2_v)).  After softmax this gives
-        alpha_uv ∝ A_uv^beta * exp(LeakyReLU(.)), which is invariant to rescaling all weights."""
+        alpha_uv ∝ A_uv^beta * exp(LeakyReLU(.)), which is invariant to rescaling all weights.
+    """
     def __init__(self, input_dim, output_dim, n_heads, attn_drop, ffd_drop, act=tf.nn.elu, residual=False,
                  bias=True, sparse_inputs=False, **kwargs):
         super(StructuralAttentionLayer, self).__init__(**kwargs)
@@ -223,25 +227,48 @@ class StructuralAttentionLayer(Layer):
             else:
                 seq_fts = _dense1(seq, out_sz, name='layer_' + str(layer_str) + '_weight_transform', use_bias=False)
 
-            # Additive self-attention.
-            f_1 = _dense1(seq_fts, 1, name='layer_' + str(layer_str) + '_a1')     # was tf.layers.conv1d(seq_fts, 1, 1)
-            f_2 = _dense1(seq_fts, 1, name='layer_' + str(layer_str) + '_a2')
-            f_1 = tf.reshape(f_1, [-1])  # [N]
-            f_2 = tf.reshape(f_2, [-1])  # [N]
-
-            # ---- modification 1 -------------------------------------------------
-            # original:
+            # ---- modification 1 + attention variant ------------------------------
+            # original GAT:
             #   logits = tf.sparse_add(adj_mat * f_1, adj_mat * tf.transpose(f_2))
             #   leaky   = LeakyReLU(logits.values)                       # A_uv multiplied INSIDE
-            # new: gather f1[row] + f2[col] per stored edge so values align with adj_mat.values,
-            #      apply LeakyReLU, then add beta * log(A_uv) OUTSIDE the nonlinearity.
+            # here: gather per stored edge so values align with adj_mat.values, apply the
+            # variant's scoring function, then add beta * log(A_uv) OUTSIDE the nonlinearity.
             adj_mat = tf.sparse_reorder(adj_mat)                          # canonical order
             rows = adj_mat.indices[:, 0]
             cols = adj_mat.indices[:, 1]
-            score = tf.gather(f_1, rows) + tf.gather(f_2, cols)           # [E]
-            score = self.leaky_relu(score)
+
+            if FLAGS.attn_variant == 'gat':
+                # e(h_i, h_j) = LeakyReLU( a1.W h_i + a2.W h_j )        Velickovic et al. 2018
+                # a1/a2 collapse each side to a scalar BEFORE the nonlinearity, so the two
+                # sides never interact: LeakyReLU is monotone, hence the ranking of j is the
+                # same for every i ("static attention", Brody et al. 2022 Theorem 1).
+                f_1 = _dense1(seq_fts, 1, name='layer_' + str(layer_str) + '_a1')
+                f_2 = _dense1(seq_fts, 1, name='layer_' + str(layer_str) + '_a2')
+                f_1 = tf.reshape(f_1, [-1])                               # [N]
+                f_2 = tf.reshape(f_2, [-1])                               # [N]
+                score = tf.gather(f_1, rows) + tf.gather(f_2, cols)       # [E]
+                score = self.leaky_relu(score)
+
+            elif FLAGS.attn_variant == 'gatv2':
+                # e(h_i, h_j) = a . LeakyReLU( W [h_i || h_j] )          Brody et al. 2022 eq. (7)
+                # The nonlinearity now comes BEFORE the projection onto a, so the two sides
+                # interact and the ranking of j can differ per i ("dynamic attention").
+                # W = [W' || W'] (share_weights, their Table 18): W' is seq_fts' transform, so
+                # W [h_i || h_j] = seq_fts[i] + seq_fts[j] and no second table is needed.
+                # Appendix G.1: gather the precomputed rows instead of recomputing per edge.
+                sf = tf.reshape(seq_fts, [-1, out_sz])                    # [N, d']
+                e_uv = tf.gather(sf, rows) + tf.gather(sf, cols)          # [E, d']
+                e_uv = self.leaky_relu(e_uv)
+                score = tf.reshape(
+                    _dense1(e_uv, 1, name='layer_' + str(layer_str) + '_a'), [-1])   # [E]
+
+            else:
+                raise ValueError("--attn_variant must be 'gat' or 'gatv2', got {!r}".format(
+                    FLAGS.attn_variant))
+
             score = score + self.vars['beta'] * tf.log(adj_mat.values + 1e-12)
-            leaky_relu = tf.SparseTensor(indices=adj_mat.indices, values=score, dense_shape=adj_mat.dense_shape)
+            leaky_relu = tf.SparseTensor(indices=adj_mat.indices, values=score,
+                                         dense_shape=adj_mat.dense_shape)
             # ---------------------------------------------------------------------
             coefficients = tf.sparse_softmax(leaky_relu)  # [N, N] (sparse), softmax over cols within each row
 

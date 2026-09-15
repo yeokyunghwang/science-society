@@ -31,6 +31,54 @@ python train.py --dataset news --years 1990-2023          # 기본값: batch 512
 
 `--src` 를 주면 다른 디렉터리의 `adj_<year>.npz` 를 읽는다. 스냅샷 개수는 `--years` 에서 나온다.
 
+## Attention 변형: GAT / GATv2
+
+`--attn_variant` 로 고른다. 구조 attention의 **점수 함수 한 곳**만 바뀌고 나머지는 전부 같다.
+
+| | 점수 함수 | 출처 |
+|---|---|---|
+| `gat` (기본) | `e(h_i,h_j) = LeakyReLU( a·[W h_i ‖ W h_j] )` | Veličković et al., ICLR 2018 |
+| `gatv2` | `e(h_i,h_j) = a·LeakyReLU( W [h_i ‖ h_j] )` | Brody et al., ICLR 2022 |
+
+GAT는 `a` 를 비선형 **앞**에서 각 변에 따로 적용한다. LeakyReLU가 단조증가라, 이웃 j 의
+**순위가 모든 질의 노드 i 에 대해 같다** (static attention, Brody et al. Theorem 1).
+GATv2는 비선형을 `a` 와 내적하기 **전**으로 옮겨 두 변이 상호작용하게 하고, 그래서 i 마다
+다른 순위를 낼 수 있다 (dynamic attention, Theorem 2).
+
+구현은 논문 식 (7)을 그대로 옮긴 것이다. 외부 라이브러리는 쓰지 않는다:
+
+- `W = [W' ‖ W']` 로 묶었다 (논문 Table 18의 실험 설정). 여기서 `W'` 가 곧 one-hot →
+  128차원 임베딩 테이블이라, 묶으면 테이블이 하나로 유지되고 `E` 의 의미가 안 바뀐다.
+  따라서 `W [h_i ‖ h_j] = seq_fts[i] + seq_fts[j]`.
+- 엣지마다 다시 계산하지 않고 미리 구한 `seq_fts` 행을 gather 한다 (Appendix G.1).
+- 파라미터: GAT는 헤드당 `a1, a2` 2 × d′, GATv2는 `a` 하나 d′. **GATv2가 오히려 적다.**
+- 비용: GAT는 엣지당 스칼라, GATv2는 엣지당 d′차원 벡터를 물질화한다. 엣지 항이 d′배다.
+  news(445K 엣지, 5스냅샷, 헤드 8, d′=16) 기준 순전파 ~1.1 GB, 역전파까지 ~3.4 GB.
+  paper(200만 엣지)는 ~15 GB라 헤드를 줄이거나 GPU가 필요하다.
+
+`β·log A_uv` 항은 두 변형 모두 동일하게 비선형 **바깥**에 붙는다.
+
+출력이 갈린다:
+
+| variant | 파일 |
+|---|---|
+| `gat` | `<embeddings>/<dataset>_E.npz` |
+| `gatv2` | `<embeddings>/<dataset>_gatv2_E.npz` |
+
+```bash
+python train.py --dataset news --years 2019-2023                      # GAT
+python train.py --dataset news --years 2019-2023 --attn_variant gatv2  # GATv2
+```
+
+노트북에서 읽을 때는 `load_embeddings("news", variant="gatv2")`.
+
+합성 데이터 자체 테스트(노드 60, 커뮤니티 3개 심음)에서:
+
+| variant | best epoch | best val loss | val PP |
+|---|---|---|---|
+| gat | 34 | 3.6122 | 37.0 |
+| gatv2 | **17** | **3.5501** | **34.8** |
+
 self-test (TF 설치 확인용, 1분):
 
 ```bash
@@ -73,6 +121,7 @@ python train.py --dataset synth --src synth --years 1990-1994 \
 | `flags.py` | `save_dir` 제거(출력 위치는 `paths.embeddings` 하나로 고정) |
 | `make_synth.py` | 합성 데이터도 실제 데이터와 같은 `adj_<year>.npz` 이름을 쓰게 함 |
 | `models/` | `models/DySAT/` 한 층을 없애고 `models/{inits,layers,models}.py` 로 폄 |
+| `models/layers.py` | **수정③** `--attn_variant` 로 GAT / GATv2 점수 함수 선택. 위 절 참조 |
 | 경로 | 진입점마다 `sys.path.insert(..., <repo>/src)` 두 줄로 `scisoc.config.paths` 를 불러온다 |
 
 ### 삭제

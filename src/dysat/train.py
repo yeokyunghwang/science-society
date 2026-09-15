@@ -29,7 +29,7 @@ tf.set_random_seed(FLAGS.seed)
 # directories / logging  (JSON flag override and csv result files removed)
 # every path comes from scisoc.config.paths -- nothing is hard-coded
 # ---------------------------------------------------------------------------
-run_dir = paths.dysat_logs / "{}_{}".format(FLAGS.base_model, FLAGS.model)
+run_dir = paths.dysat_logs / "{}_{}_{}".format(FLAGS.base_model, FLAGS.model, FLAGS.attn_variant)
 LOG_DIR = run_dir / FLAGS.log_subdir
 MODEL_DIR = run_dir / FLAGS.model_dir
 SAVE_DIR = paths.embeddings                       # final E lands where notebook 03 reads it
@@ -43,6 +43,7 @@ log_file = str(LOG_DIR / "{}_{}_{}_{}_{}.log".format(
 logging.basicConfig(filename=log_file, level=logging.INFO,
                     format='%(asctime)s - %(levelname)s: %(message)s', datefmt='%m/%d/%Y %H:%M:%S')
 logging.info(FLAGS.flag_values_dict().items())
+print("variant  ", FLAGS.attn_variant)
 print("run dir  ", run_dir)
 print("output   ", SAVE_DIR)
 
@@ -205,8 +206,9 @@ full_feed.update({placeholders['spatial_drop']: 0.0, placeholders['temporal_drop
 
 E, attn_mean, beta_val, P = sess.run([model.final_output_embeddings, temporal_attn_mean, beta_var, pos_emb],
                                      feed_dict=full_feed)                       # E: [N, T, F]  (was [:, T-2, :])
-out_path = SAVE_DIR / "{}_E.npz".format(FLAGS.dataset.replace('/', '_'))
+out_path = paths.embedding_npz(FLAGS.dataset.replace('/', '_'), FLAGS.attn_variant)
 np.savez(out_path, E=E.astype(np.float32), active=active_full, beta=beta_val,
+         attn_variant=FLAGS.attn_variant,
          temporal_attn_mean=attn_mean, position_embeddings=P,
          best_epoch=best_epoch, best_val_loss=best_val,
          train_loss=np.array(history['train_loss']),

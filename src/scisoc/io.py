@@ -47,15 +47,18 @@ def iter_adj(source: str, years, net_dir: Path | None = None):
         yield int(year), load_adj(source, int(year), net_dir)
 
 
-def load_embeddings(source: str, path: Path | None = None):
+def load_embeddings(source: str, path: Path | None = None, variant: str = "gat"):
     """Return `(E, active)` for one arena.
 
     Accepts either
-      * the DySAT export `<source>_E.npz` (keys `E` [N, T, F], `active` [N, T]), or
+      * the DySAT export `<source>[_<variant>]_E.npz` (keys `E` [N, T, F],
+        `active` [N, T]), or
       * a bare `.npy` array [N, T, F] -- then `active` is None and the caller
         falls back to `node_info["concept_freq_year"] > 0`.
+
+    `variant` picks between the GAT and GATv2 runs; an explicit `path` wins.
     """
-    path = Path(path) if path is not None else paths.embedding_npz(source)
+    path = Path(path) if path is not None else paths.embedding_npz(source, variant)
     if path.suffix == ".npz":
         with np.load(path, allow_pickle=False) as d:
             E = d["E"]
