@@ -51,7 +51,11 @@ GATv2는 비선형을 `a` 와 내적하기 **전**으로 옮겨 두 변이 상�
   128차원 임베딩 테이블이라, 묶으면 테이블이 하나로 유지되고 `E` 의 의미가 안 바뀐다.
   따라서 `W [h_i ‖ h_j] = seq_fts[i] + seq_fts[j]`.
 - 엣지마다 다시 계산하지 않고 미리 구한 `seq_fts` 행을 gather 한다 (Appendix G.1).
-- 파라미터: GAT는 헤드당 `a1, a2` 2 × d′, GATv2는 `a` 하나 d′. **GATv2가 오히려 적다.**
+- 파라미터: GAT는 헤드당 `a1, a2` 2 × d′(+bias), GATv2는 `a` 하나 d′(bias 없음 — 참조 구현의
+  `(x * att).sum(-1)` 과 동일). 실측 4헤드 d′=8 기준 **72 vs 32**.
+- `--share_weights` 로 `W_dst = W_src` 여부를 고른다. 기본값 `False` (PyG `GATv2Conv` 와 동일).
+  `True` 는 논문 Table 18 의 실험 설정으로 임베딩 테이블 하나를 양쪽에 쓴다. one-hot 입력이라
+  `False` 면 `[N, d′]` 테이블이 하나 더 생기고, 그건 attention 점수로만 학습된다.
 - 비용: GAT는 엣지당 스칼라, GATv2는 엣지당 d′차원 벡터를 물질화한다. 엣지 항이 d′배다.
   news(445K 엣지, 5스냅샷, 헤드 8, d′=16) 기준 순전파 ~1.1 GB, 역전파까지 ~3.4 GB.
   paper(200만 엣지)는 ~15 GB라 헤드를 줄이거나 GPU가 필요하다.
@@ -82,15 +86,14 @@ python train.py --dataset news --years 2019-2023 --attn_variant gatv2  # GATv2
 self-test (TF 설치 확인용, 1분):
 
 ```bash
-python make_synth.py
+python selftest.py
 python train.py --dataset synth --src synth --years 1990-1994 \
     --epochs 60 --batch_size 20 --patience 10 \
     --structural_head_config 4 --structural_layer_config 32 \
     --temporal_head_config 4 --temporal_layer_config 32
 ```
 
-확률/perplexity: `export_probs.py` 의 `load_export(source)`, `cond_prob(E, active, v, t)`,
-`perplexity(E, active, pairs, t)`.
+경로 단위 perplexity 는 `notebooks/03_backbone_perplexity.ipynb` 에서 계산한다.
 
 ## 파일별 변경
 
@@ -108,7 +111,7 @@ python train.py --dataset synth --src synth --years 1990-1994 \
 
 ### 신설
 
-`tf_compat.py`(TF1/2 shim), `export_probs.py`, `make_synth.py`.
+`tf_compat.py`(TF1/2 shim), `selftest.py`(합성 데이터 자체 테스트).
 
 ### 2026-09 저장소 통합 시 수정
 
@@ -119,7 +122,8 @@ python train.py --dataset synth --src synth --years 1990-1994 \
 | `train.py` | `--src`/`--years` 로 스냅샷을 직접 읽고 시간 스텝 수를 거기서 정한다(`--time_steps` 플래그 삭제). 출력 경로를 `paths` 로 통일(`<embeddings>/<source>_E.npz`). 검증 손실이 한 번도 개선되지 않으면 체크포인트가 없어 `saver.restore` 에서 죽던 문제를 경고 후 마지막 파라미터로 내보내도록 처리. 검증 쌍이 0개인 경우를 assert 로 조기 진단 |
 | `export_probs.py` | 해당 연도에 활성 노드가 없을 때 `max()` 가 빈 배열에서 죽던 문제, `pairs` 가 비었을 때 `mean()` 이 NaN 경고를 내던 문제 처리. `load_export(source)` 추가 |
 | `flags.py` | `save_dir` 제거(출력 위치는 `paths.embeddings` 하나로 고정) |
-| `make_synth.py` | 합성 데이터도 실제 데이터와 같은 `adj_<year>.npz` 이름을 쓰게 함 |
+| `make_synth.py` → `selftest.py` | 합성 데이터도 실제 데이터와 같은 `adj_<year>.npz` 이름을 쓰게 하고, 자체 테스트임이 이름에 드러나게 함 |
+| `export_probs.py` | **삭제.** 쌍 단위 `p(u\|v)` 를 꺼내는 코드였으나 어디서도 쓰지 않았다. 경로 단위 perplexity 는 노트북 03 이 계산한다 |
 | `models/` | `models/DySAT/` 한 층을 없애고 `models/{inits,layers,models}.py` 로 폄 |
 | `models/layers.py` | **수정③** `--attn_variant` 로 GAT / GATv2 점수 함수 선택. 위 절 참조 |
 | 경로 | 진입점마다 `sys.path.insert(..., <repo>/src)` 두 줄로 `scisoc.config.paths` 를 불러온다 |

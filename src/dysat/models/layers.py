@@ -253,16 +253,32 @@ class StructuralAttentionLayer(Layer):
                 # e(h_i, h_j) = a . LeakyReLU( W [h_i || h_j] )          Brody et al. 2022 eq. (7)
                 # The nonlinearity now comes BEFORE the projection onto a, so the two sides
                 # interact and the ranking of j can differ per i ("dynamic attention").
-                # W = [W' || W'] (share_weights, their Table 18): W' is seq_fts' transform, so
-                # W [h_i || h_j] = seq_fts[i] + seq_fts[j] and no second table is needed.
+                # W = [W_dst || W_src] applied to the concatenation, i.e.
+                # W [h_i || h_j] = W_dst h_i + W_src h_j. --share_weights ties the two
+                # (their Table 18 setting), which reuses the one embedding table; without it
+                # a second [N, d'] table is learned for the target side only.
                 # Appendix G.1: gather the precomputed rows instead of recomputing per edge.
                 # PyG GATv2Conv / the authors' gatv2_conv_DGL.py, line for line:
                 #   x_l = lin_l(x)                 ->  sf              (share_weights: x_r = x_l)
                 #   x = x_i + x_j                  ->  gather + gather (DGL: fn.u_add_v)
                 #   x = leaky_relu(x)              ->  leaky_relu
                 #   alpha = (x * att).sum(-1)      ->  _dense1(..., use_bias=False)
-                sf = tf.reshape(seq_fts, [-1, out_sz])                    # [N, d']
-                e_uv = tf.gather(sf, rows) + tf.gather(sf, cols)          # [E, d']
+                # rows = target (the node asking), cols = source (the neighbour).
+                # PyG takes values from lin_l = the source side, so seq_fts is the source
+                # projection and, with share_weights, the target projection too.
+                sf_src = tf.reshape(seq_fts, [-1, out_sz])                # [N, d']
+                if FLAGS.share_weights:
+                    sf_dst = sf_src
+                elif sparse_inputs:
+                    w_dst = tf.get_variable(
+                        "layer_" + str(layer_str) + "_weight_transform_dst",
+                        shape=[in_sz, out_sz], dtype=tf.float32)
+                    sf_dst = tf.sparse_tensor_dense_matmul(seq, w_dst)    # [N, d']
+                else:
+                    sf_dst = tf.reshape(
+                        _dense1(seq, out_sz, name='layer_' + str(layer_str) + '_w_dst',
+                                use_bias=False), [-1, out_sz])
+                e_uv = tf.gather(sf_dst, rows) + tf.gather(sf_src, cols)  # [E, d']
                 e_uv = self.leaky_relu(e_uv)
                 score = tf.reshape(
                     _dense1(e_uv, 1, name='layer_' + str(layer_str) + '_a',

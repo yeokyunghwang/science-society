@@ -1,6 +1,7 @@
-"""Self-test: a tiny weighted 5-snapshot dataset with 3 planted communities.
+"""Self-test: build a tiny weighted 5-snapshot dataset with 3 planted communities
+and train on it, to check the install and the code without the real data.
 
-    python make_synth.py
+    python selftest.py
     python train.py --dataset synth --src synth --years 1990-1994 \
         --epochs 60 --batch_size 20 --patience 10 \
         --structural_head_config 4 --structural_layer_config 32 \
@@ -36,3 +37,7 @@ for t in range(T):
     sp.save_npz("synth/adj_{}.npz".format(1990 + t), sp.csr_matrix(A))
 
 print("wrote synth/adj_1990.npz .. adj_{}.npz".format(1990 + T - 1))
+print("now run:  python train.py --dataset synth --src synth --years 1990-1994 \\")
+print("              --epochs 60 --batch_size 20 --patience 10 \\")
+print("              --structural_head_config 4 --structural_layer_config 32 \\")
+print("              --temporal_head_config 4 --temporal_layer_config 32")

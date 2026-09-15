@@ -38,6 +38,13 @@ flags.DEFINE_string('attn_variant', 'gat',
                     "'gatv2' (Brody et al. 2022, dynamic). Names the output "
                     "<embeddings>/<dataset>_E.npz vs <dataset>_gatv2_E.npz.")
 
+flags.DEFINE_boolean('share_weights', False,
+                     "GATv2 only: use one matrix for both sides of an edge (W = [W'||W']). "
+                     "PyG's GATv2Conv defaults to False; the paper's experiments (Table 18) "
+                     "used True to match GAT's parameter count. With one-hot features W is the "
+                     "[N, d'] embedding table, so False adds a second table of that size, "
+                     "trained only through the attention score. Ignored when attn_variant='gat'.")
+
 flags.DEFINE_float('temporal_drop', 0.0, 'Dropout on temporal attention weights. NOTE: original '
                    'used tf.layers.dropout(training=False) => never applied; 0.0 reproduces that.')  # was 0.5
 
