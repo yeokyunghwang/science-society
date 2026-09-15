@@ -87,22 +87,25 @@ python train.py --dataset news --years 2019-2023 --attn_variant gatv2  # GATv2
 
 노트북에서 읽을 때는 `load_embeddings("news", variant="gatv2")`.
 
-합성 데이터 자체 테스트(노드 60, 커뮤니티 3개 심음)에서:
+합성 데이터 자체 테스트(노드 60, 커뮤니티 3개 심음, 기준 설정)에서:
 
-| variant | best epoch | best val loss | val PP |
-|---|---|---|---|
-| gat | 34 | 3.6122 | 37.0 |
-| gatv2 | **17** | **3.5501** | **34.8** |
+| variant | best epoch | best val loss |
+|---|---|---|
+| gat | 21 | 3.3690 |
+| gatv2 `--share_weights=false` (기본) | 22 | 3.3654 |
+| gatv2 `--share_weights=true` | 30 | **3.3594** |
 
-self-test (TF 설치 확인용, 1분):
+self-test (TF 설치와 두 attention 변형 확인용):
 
 ```bash
-python selftest.py
-python train.py --dataset synth --src synth --years 1990-1994 \
-    --epochs 60 --batch_size 20 --patience 10 \
-    --structural_head_config 4 --structural_layer_config 32 \
-    --temporal_head_config 4 --temporal_layer_config 32
+python selftest.py                            # 노드 60, 스냅샷 5 — 기준 케이스, 1분
+python selftest.py --nodes 3000 --degree 50   # 실데이터 밀도에 가깝게, epoch당 12~17초
+python train.py --dataset synth --src synth --years 1990-1994 --attn_variant gat   [--batch_size ...]
+python train.py --dataset synth --src synth --years 1990-1994 --attn_variant gatv2 [--batch_size ...]
 ```
+
+`selftest.py` 가 그래프를 만들고 나서 그 크기에 맞는 `train.py` 명령을 찍어준다. `--nodes`,
+`--snapshots`, `--communities`, `--degree`(목표 평균 degree) 로 크기를 조절한다.
 
 경로 단위 perplexity 는 `notebooks/03_backbone_perplexity.ipynb` 에서 계산한다.
 
