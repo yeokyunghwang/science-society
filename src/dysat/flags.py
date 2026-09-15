@@ -6,7 +6,10 @@ FLAGS = flags.FLAGS
 # ---- unchanged from original ----
 flags.DEFINE_string('base_model', 'DySAT', 'Base model string.')
 flags.DEFINE_string('model', 'default', 'Model string.')
-flags.DEFINE_string('dataset', 'news', 'Dataset string (data/<dataset>/graphs.npz).')
+flags.DEFINE_string('dataset', 'news', 'Arena name: names the output <embeddings>/<dataset>_E.npz '
+                    'and, unless --src is given, the input dir <networks>/<dataset>/.')
+flags.DEFINE_string('src', None, 'Dir holding adj_<year>.npz. Default: <networks>/<dataset>/.')
+flags.DEFINE_string('years', '1990-2023', 'Snapshot range FIRST-LAST. Sets the number of time steps.')
 flags.DEFINE_integer('GPU_ID', 0, 'GPU_ID')
 flags.DEFINE_boolean('featureless', True, 'Use 1-hot instead of features')
 flags.DEFINE_float('max_gradient_norm', 1.0, 'Clip gradients to this norm')
@@ -26,7 +29,6 @@ flags.DEFINE_string('model_dir', "model", 'Checkpoint dir inside the run dir')
 flags.DEFINE_integer('window', -1, 'Window for temporal attention (default : -1 => full)')
 
 # ---- changed defaults ----
-flags.DEFINE_integer('time_steps', 34, '# snapshots. ALL are trained (no held-out future step).')   # was 3
 flags.DEFINE_integer('epochs', 200, 'Max number of epochs (early stopping on val loss).')             # was 1
 flags.DEFINE_integer('batch_size', 512, 'Batch size (# nodes)')                                       # unchanged value
 flags.DEFINE_string('structural_head_config', '8', '# attention heads in each GAT layer')            # was '16'
@@ -43,6 +45,7 @@ flags.DEFINE_boolean('binary_adj', False, 'If True, ignore edge weights in struc
 
 # ---- removed ----
 # neg_sample_size, neg_weight, walk_len, test_freq, csv_dir
+# time_steps: derived from --years; ALL snapshots are trained (no held-out future step)
 # save_dir: the final embeddings now go to scisoc.config.paths.embeddings,
 # the one place notebook 03 reads them from. Run artefacts (log/, model/)
 # live under paths.dysat_logs/<base_model>_<model>/.

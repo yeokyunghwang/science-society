@@ -39,7 +39,7 @@ for d in (run_dir, LOG_DIR, MODEL_DIR, SAVE_DIR):
 os.environ["CUDA_VISIBLE_DEVICES"] = str(FLAGS.GPU_ID)
 today = datetime.today()
 log_file = str(LOG_DIR / "{}_{}_{}_{}_{}.log".format(
-    FLAGS.dataset.split("/")[0], today.year, today.month, today.day, FLAGS.time_steps))
+    FLAGS.dataset.split("/")[0], today.year, today.month, today.day, FLAGS.years))
 logging.basicConfig(filename=log_file, level=logging.INFO,
                     format='%(asctime)s - %(levelname)s: %(message)s', datefmt='%m/%d/%Y %H:%M:%S')
 logging.info(FLAGS.flag_values_dict().items())
@@ -49,14 +49,14 @@ print("output   ", SAVE_DIR)
 # ---------------------------------------------------------------------------
 # data
 # ---------------------------------------------------------------------------
-num_time_steps = FLAGS.time_steps
-graphs, adjs = load_graphs(FLAGS.dataset)
-assert num_time_steps <= len(adjs), "time_steps ({}) > number of snapshots ({})".format(
-    num_time_steps, len(adjs))                                  # was `< len+1` (t+1 prediction)
-adjs = adjs[:num_time_steps]
+first, _, last = FLAGS.years.partition("-")
+if not last:
+    raise ValueError("--years must be FIRST-LAST, e.g. --years 2019-2023")
+src_dir = Path(FLAGS.src).expanduser() if FLAGS.src else paths.networks / FLAGS.dataset
+adjs = load_graphs(src_dir, range(int(first), int(last) + 1))   # shape check lives there
+num_time_steps = len(adjs)
 N = adjs[0].shape[0]
-for a in adjs:
-    assert a.shape[0] == N, "fixed vocabulary expected: every snapshot must have the same node set"
+print("T =", num_time_steps, " N =", N)
 
 # REMOVED: get_context_pairs (random walks)
 # REMOVED: get_evaluation_data (link-prediction train/val/test split)

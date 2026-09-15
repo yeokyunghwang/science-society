@@ -1,8 +1,8 @@
 """Self-test: a tiny weighted 5-snapshot dataset with 3 planted communities.
 
     python make_synth.py
-    python prepare_data.py --source synth --src synth --years 1990 1994
-    python train.py --dataset synth --time_steps 5 --epochs 60 --batch_size 20 --patience 10 \
+    python train.py --dataset synth --src synth --years 1990-1994 \
+        --epochs 60 --batch_size 20 --patience 10 \
         --structural_head_config 4 --structural_layer_config 32 \
         --temporal_head_config 4 --temporal_layer_config 32
 
@@ -10,7 +10,7 @@ Expect: loss starts ~4.05 (= log 57, uniform), val perplexity drops to ~36,
 early stop around epoch 30, beta ~1.03.
 
 Files are written as `synth/adj_<year>.npz`, the same layout notebook 01 uses
-for the real arenas, so prepare_data.py reads both with one code path.
+for the real arenas, so train.py reads both with one code path.
 """
 
 import os

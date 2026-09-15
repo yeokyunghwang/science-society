@@ -3,7 +3,6 @@ import sys
 from pathlib import Path
 
 import numpy as np
-import networkx as nx
 import scipy.sparse as sp
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))     # <repo>/src -> scisoc
@@ -19,37 +18,47 @@ np.random.seed(123)
 # ---------------------------------------------------------------------------
 # unchanged (except list(map) for py3)
 # ---------------------------------------------------------------------------
-def dataset_dir(dataset_str, data_root=None):
-    """Where prepare_data.py put `graphs.npz` for this dataset.
+def load_graphs(src, years):
+    """Per-year adjacency matrices, read straight from `adj_<year>.npz`.
 
-    CHANGE: the original hard-coded `data/<dataset>/` relative to the process
-    working directory. The root now comes from `scisoc.config.paths`, so the
-    scripts can be launched from anywhere and the notebooks and the trainer
-    agree on one location.
+    CHANGE: the original unpickled a list of networkx graphs from
+    `data/<dataset>/graphs.npz` and immediately converted them back with
+    `nx.adjacency_matrix`. Both ends of that round trip were scipy sparse and the
+    networkx objects themselves were never used (they fed the random walks and the
+    link-prediction eval, both removed), so the conversion -- and the prepare_data.py
+    step that produced graphs.npz -- are gone.
+
+    Every snapshot is N x N on the same node set, so concepts that do not occur in a
+    given year stay in the matrix as empty rows; train.py marks them inactive.
+
+    Returns a list of csr matrices, one per year, self-loops removed.
     """
-    root = Path(data_root) if data_root is not None else paths.dysat_input
-    return root / dataset_str
+    src = Path(src)
+    adjs, N = [], None
+    for y in years:
+        f = src / "adj_{}.npz".format(y)
+        if not f.is_file():
+            raise FileNotFoundError(
+                "{} not found. Point --src at the directory holding adj_<year>.npz "
+                "(notebook 01 writes them to <networks>/<source>/).".format(f))
+        A = sp.load_npz(f).tocsr()
+        A.setdiag(0)
+        A.eliminate_zeros()
+        if N is None:
+            N = A.shape[0]
+        if A.shape != (N, N):
+            raise ValueError(
+                "fixed vocabulary expected: {} is {} but the first snapshot was ({}, {})"
+                .format(f, A.shape, N, N))
+        adjs.append(A)
+        print("{}  nodes {}  edges {}".format(y, N, A.nnz // 2))
+    if not adjs:
+        raise ValueError("no snapshots in range {}".format(list(years)))
+    return adjs
 
 
-def load_graphs(dataset_str, data_root=None):
-    """Load graph snapshots given the name of a dataset."""
-    f = dataset_dir(dataset_str, data_root) / "graphs.npz"
-    if not f.is_file():
-        raise FileNotFoundError(
-            "{} not found. Run:  python prepare_data.py --source {}".format(f, dataset_str))
-    graphs = np.load(f, allow_pickle=True)['graph']
-    print("Loaded {} graphs from {}".format(len(graphs), f))
-    # weight attribute -> matrix values; sorted nodelist keeps ids aligned across years
-    adj_matrices = [sp.csr_matrix(nx.adjacency_matrix(x, nodelist=sorted(x.nodes()))) for x in graphs]
-    return list(graphs), adj_matrices
-
-
-def load_feats(dataset_str, data_root=None):
-    """Load node attribute snapshots (not used in these experiments)."""
-    f = dataset_dir(dataset_str, data_root) / "features.npz"
-    features = np.load(f, allow_pickle=True)['feats']
-    print("Loaded {} X matrices ".format(len(features)))
-    return features
+# REMOVED: load_feats (features.npz was never produced; featureless=True is the only
+#          wired-up path) and dataset_dir (there is no intermediate dataset dir now).
 
 
 def sparse_to_tuple(sparse_mx):

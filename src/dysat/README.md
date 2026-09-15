@@ -14,7 +14,6 @@
 | 무엇 | 어디 |
 |---|---|
 | 입력 스냅샷 | `data/processed/networks/<source>/adj_<year>.npz` (노트북 01 생성) |
-| DySAT 입력 | `data/processed/dysat/<source>/graphs.npz` (`prepare_data.py` 생성) |
 | 최종 임베딩 | `data/processed/embeddings/<source>_E.npz` (노트북 03 이 읽는 위치) |
 | 로그·체크포인트 | `results/dysat/DySAT_default/{log,model}/` (추적하지 않음) |
 
@@ -23,20 +22,21 @@
 `src/dysat/` 에서 실행한다 (`from flags import *`, `from models...` 가 상대 import 이므로).
 
 ```bash
-pip install "tensorflow-cpu>=2.16" "numpy<2" scipy networkx     # 또는 TF 1.15 + numpy<1.20
+pip install "tensorflow-cpu>=2.16" "numpy<2" scipy            # 또는 TF 1.15 + numpy<1.20
 
 cd src/dysat
-python prepare_data.py --source news --years 1990 2023
-python train.py --dataset news --time_steps 34            # 기본값: batch 512, heads 8, dim 128
+python train.py --dataset news --years 1990-2023          # 기본값: batch 512, heads 8, dim 128
 # 결과: data/processed/embeddings/news_E.npz  →  E [N,34,128], active [N,34], beta, ...
 ```
+
+`--src` 를 주면 다른 디렉터리의 `adj_<year>.npz` 를 읽는다. 스냅샷 개수는 `--years` 에서 나온다.
 
 self-test (TF 설치 확인용, 1분):
 
 ```bash
 python make_synth.py
-python prepare_data.py --source synth --src synth --years 1990 1994
-python train.py --dataset synth --time_steps 5 --epochs 60 --batch_size 20 --patience 10 \
+python train.py --dataset synth --src synth --years 1990-1994 \
+    --epochs 60 --batch_size 20 --patience 10 \
     --structural_head_config 4 --structural_layer_config 32 \
     --temporal_head_config 4 --temporal_layer_config 32
 ```
@@ -50,7 +50,7 @@ python train.py --dataset synth --time_steps 5 --epochs 60 --batch_size 20 --pat
 
 | 파일 | 변경 |
 |---|---|
-| `flags.py` | `time_steps` 34, `epochs` 200, `structural_head_config` '8', `temporal_drop` 0.0. 신설 `max_positive`, `val_frac`, `val_pairs_per_step`, `patience`, `beta_init`, `binary_adj`. 삭제 `neg_sample_size`, `neg_weight`, `walk_len`, `test_freq`, `csv_dir`. `log_dir`→`log_subdir` (absl 충돌) |
+| `flags.py` | `epochs` 200, `structural_head_config` '8', `temporal_drop` 0.0. 신설 `max_positive`, `val_frac`, `val_pairs_per_step`, `patience`, `beta_init`, `binary_adj`. 삭제 `neg_sample_size`, `neg_weight`, `walk_len`, `test_freq`, `csv_dir`. `log_dir`→`log_subdir` (absl 충돌) |
 | `train.py` | **제거:** JSON 플래그 덮어쓰기, `get_context_pairs`, `get_evaluation_data`, 마지막 스냅샷 엣지 덮어쓰기(126–135행), `evaluate_classifier`·csv, `[:, T−2, :]` 슬라이싱. **추가:** 스냅샷별 `split_edges` → 학습 인접행렬 + held-out 쌍, `active` placeholder, 고정 검증 부분집합, 검증 손실 조기종료, best checkpoint, 전체 인접행렬로 최종 `E [N,T,F]` 계산·저장(+ β, temporal attn 평균, 위치 임베딩, 손실 이력) |
 | `utils/preprocess.py` | `preprocess_features`: `.todense()` 제거. `sparse_to_tuple`: canonical 정렬. **신설** `adj_with_selfloop_raw` (원가중치 + self-loop=행평균, GCN 정규화 없음), `split_edges`. **삭제** `normalize_graph_gcn`, `get_context_pairs*`, `get_evaluation_data`, `create_data_splits`, random_walk import |
 | `utils/minibatch.py` | 컨텍스트 쌍 → `sample_pairs`: 학습 인접행렬 행에서 이웃을 가중치 비례로 `max_positive`개 추출. `active` 마스크 생성. `pairs_feed_dict` (검증용). `max_positive`가 `neg_sample_size`에서 분리 |
@@ -60,15 +60,15 @@ python train.py --dataset synth --time_steps 5 --epochs 60 --batch_size 20 --pat
 
 ### 신설
 
-`tf_compat.py`(TF1/2 shim), `prepare_data.py`(adj_<year>.npz → graphs.npz), `export_probs.py`, `make_synth.py`.
+`tf_compat.py`(TF1/2 shim), `export_probs.py`, `make_synth.py`.
 
 ### 2026-09 저장소 통합 시 수정
 
 | 파일 | 변경 |
 |---|---|
-| `prepare_data.py` | 입력 파일명이 `{source}_{year}_adj_f.npz` 로 되어 있어 노트북 01 의 실제 산출물(`networks/<source>/adj_<year>.npz`)과 맞지 않았다. 실제 레이아웃으로 맞추고 `--src`/`--out` 기본값을 `paths` 에서 가져오게 함 |
-| `utils/preprocess.py` | `load_graphs` 가 프로세스 작업 디렉터리 기준 `data/<dataset>/` 를 하드코딩했다. `paths.dysat_input` 기준으로 변경, 파일이 없을 때 재현 명령을 알려주는 예외 추가. `nx.adjacency_matrix` 결과를 `csr_matrix` 로 명시 변환(networkx 3.x 는 sparse *array* 를 반환) |
-| `train.py` | 출력 경로를 `paths` 로 통일(`<embeddings>/<source>_E.npz`). 검증 손실이 한 번도 개선되지 않으면 체크포인트가 없어 `saver.restore` 에서 죽던 문제를 경고 후 마지막 파라미터로 내보내도록 처리. 검증 쌍이 0개인 경우를 assert 로 조기 진단 |
+| `prepare_data.py` | **삭제.** scipy 희소행렬 → networkx → 다시 scipy 로 되돌리는 왕복이었고, `load_graphs` 가 반환하던 networkx 객체는 `train.py` 에서 한 번도 쓰이지 않았다(원본에서 random walk 와 link-prediction 평가가 쓰던 것으로, 둘 다 제거됨). 중간 산출물 `graphs.npz` 와 networkx 의존성도 같이 없어졌다 |
+| `utils/preprocess.py` | `load_graphs` 가 `adj_<year>.npz` 를 직접 읽는다. 작업 디렉터리 기준 하드코딩 제거, 연도마다 어휘가 다르면 예외. `load_feats`(`features.npz` 는 생성된 적 없음)와 `dataset_dir` 삭제 |
+| `train.py` | `--src`/`--years` 로 스냅샷을 직접 읽고 시간 스텝 수를 거기서 정한다(`--time_steps` 플래그 삭제). 출력 경로를 `paths` 로 통일(`<embeddings>/<source>_E.npz`). 검증 손실이 한 번도 개선되지 않으면 체크포인트가 없어 `saver.restore` 에서 죽던 문제를 경고 후 마지막 파라미터로 내보내도록 처리. 검증 쌍이 0개인 경우를 assert 로 조기 진단 |
 | `export_probs.py` | 해당 연도에 활성 노드가 없을 때 `max()` 가 빈 배열에서 죽던 문제, `pairs` 가 비었을 때 `mean()` 이 NaN 경고를 내던 문제 처리. `load_export(source)` 추가 |
 | `flags.py` | `save_dir` 제거(출력 위치는 `paths.embeddings` 하나로 고정) |
 | `make_synth.py` | 합성 데이터도 실제 데이터와 같은 `adj_<year>.npz` 이름을 쓰게 함 |

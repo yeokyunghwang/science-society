@@ -112,11 +112,6 @@ class Paths:
         """DySAT output: `<source>_E.npz` with E [N, T, F] and active [N, T]."""
         return self.data / "embeddings"
 
-    @property
-    def dysat_input(self) -> Path:
-        """DySAT input: `<source>/graphs.npz` written by src/dysat/prepare_data.py."""
-        return self.data / "dysat"
-
     # ---- results ------------------------------------------------------
     @property
     def results(self) -> Path:
@@ -148,7 +143,7 @@ class Paths:
     def ensure(self) -> "Paths":
         """Create every output directory. Inputs are never created."""
         for d in (self.networks, self.backbone, self.embeddings,
-                  self.dysat_input, self.cp_results, self.figures):
+                  self.cp_results, self.figures):
             d.mkdir(parents=True, exist_ok=True)
         return self
 
@@ -159,7 +154,6 @@ class Paths:
             ("networks", self.networks),
             ("backbone", self.backbone),
             ("embeddings", self.embeddings),
-            ("dysat_input", self.dysat_input),
             ("cp_results", self.cp_results),
             ("figures", self.figures),
         ]
