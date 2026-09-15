@@ -256,11 +256,17 @@ class StructuralAttentionLayer(Layer):
                 # W = [W' || W'] (share_weights, their Table 18): W' is seq_fts' transform, so
                 # W [h_i || h_j] = seq_fts[i] + seq_fts[j] and no second table is needed.
                 # Appendix G.1: gather the precomputed rows instead of recomputing per edge.
+                # PyG GATv2Conv / the authors' gatv2_conv_DGL.py, line for line:
+                #   x_l = lin_l(x)                 ->  sf              (share_weights: x_r = x_l)
+                #   x = x_i + x_j                  ->  gather + gather (DGL: fn.u_add_v)
+                #   x = leaky_relu(x)              ->  leaky_relu
+                #   alpha = (x * att).sum(-1)      ->  _dense1(..., use_bias=False)
                 sf = tf.reshape(seq_fts, [-1, out_sz])                    # [N, d']
                 e_uv = tf.gather(sf, rows) + tf.gather(sf, cols)          # [E, d']
                 e_uv = self.leaky_relu(e_uv)
                 score = tf.reshape(
-                    _dense1(e_uv, 1, name='layer_' + str(layer_str) + '_a'), [-1])   # [E]
+                    _dense1(e_uv, 1, name='layer_' + str(layer_str) + '_a',
+                            use_bias=False), [-1])                        # [E]
 
             else:
                 raise ValueError("--attn_variant must be 'gat' or 'gatv2', got {!r}".format(
